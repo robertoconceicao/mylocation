@@ -5,8 +5,8 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import br.com.mylocation.bean.Command;
-import br.com.mylocation.bean.command.Login;
+import br.com.mylocation.bean.message.Command;
+import br.com.mylocation.bean.message.command.Login;
 
 public class Server {
 
@@ -25,7 +25,7 @@ public class Server {
 				Command command = (Command) read.readObject();
 				Login login = (Login) command.getData();
 				
-				System.out.println("Dados recebidos: "+command.toString());
+				System.out.println("Dados recebidos: ");
 				System.out.println("Operation: "+command.getOperation());
 				System.out.println("Type: "+command.getType());
 				System.out.println("Rid: "+command.getRid());

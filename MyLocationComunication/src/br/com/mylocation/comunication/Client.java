@@ -1,32 +1,48 @@
 package br.com.mylocation.comunication;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.channels.SocketChannel;
 
-import br.com.mylocation.bean.Command;
-import br.com.mylocation.bean.command.Login;
+import br.com.mylocation.bean.message.Message;
 
 public class Client {
 
+	private SocketChannel socketChannel;
+	private ObjectOutputStream output;
+	private ObjectInputStream input;
+	
+	public Client(){
+		try {
+			socketChannel = SocketChannel.open();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
      * @param args argumentos da linha de comando
+	 * @throws IOException 
      */
-    public static void main(String[] args) {
-        try {
-            Socket socket = new Socket("127.0.0.1", 12345);
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());            
-            
-            Command command = new Command();
-            command.setOperation(1); //login
-            command.setType(0); // command
-            command.setRid(123);
-            Login login = new Login("Roberto");            
-            command.setData(login);
-            
-            output.writeObject(command);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    public void connect(String hostname, int port) throws IOException {
+    	socketChannel.connect(new InetSocketAddress(hostname, port));
+        output = new ObjectOutputStream(socketChannel.socket().getOutputStream());
+        input = new ObjectInputStream(socketChannel.socket().getInputStream());
+    }
+    
+    public void sendMessage(Message message) throws IOException{
+    	if(output != null){
+    		output.writeObject(message);
+    	}
+    }
+    
+    public Message onMessage() throws IOException, ClassNotFoundException{
+    	Message message = null;
+    	if(input != null){
+    		message = (Message) input.readObject();
+    	}
+    	return message;
     }
 }
