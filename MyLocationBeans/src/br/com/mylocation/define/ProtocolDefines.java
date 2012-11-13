@@ -15,6 +15,6 @@ public interface ProtocolDefines {
     static final int STATUS_SUCCESS = 0;
     static final int STATUS_FAIL = 1;
     
-    static final String HOST_NAME = "127.0.0.1";
+    static final String HOST_NAME = "192.168.1.6";
     static final int PORT = 8889;
 }

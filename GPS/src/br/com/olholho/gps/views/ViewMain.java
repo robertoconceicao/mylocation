@@ -33,26 +33,32 @@ public class ViewMain extends Activity {
 		buttonConnect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showDialog(0);
-				try {
-					client.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);
-					dismissDialog(0);
-					Toast.makeText(v.getContext(), "Conectado", Toast.LENGTH_SHORT).show();
-				} catch (IOException e) {
-					dismissDialog(0);
-					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-				}
-				buttonConnect.setText("Conectado");
+				int i = 0;
+				progDialog = new ProgressDialog(ViewMain.this);
+		        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		        progDialog.setMessage(R.string.connect+"...");
+		        
+				while(++i < 10000000 ){}
+				
+//				try {
+//					client.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);
+//					dismissDialog(0);
+//					Toast.makeText(v.getContext(), "Conectado", Toast.LENGTH_SHORT).show();
+//					buttonConnect.setText("Conectado");
+//				} catch (IOException e) {
+//					dismissDialog(0);
+//					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//				}				
 			}
 		});
 	}
 	
 	// Method to create a progress bar dialog of either spinner or horizontal type
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        progDialog = new ProgressDialog(this);
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDialog.setMessage(R.string.connect+"...");
-        return progDialog;
-    }
+//    @Override
+//    protected Dialog onCreateDialog(int id) {
+//        progDialog = new ProgressDialog(this);
+//        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progDialog.setMessage(R.string.connect+"...");
+//        return progDialog;
+//    }
 }

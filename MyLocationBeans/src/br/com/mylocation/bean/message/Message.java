@@ -13,13 +13,13 @@ public class Message
     private int type;
     private Object data;
 
-    protected Message(int operation, int type, Object data) {
+    public Message(int operation, int type, Object data) {
         this.operation = operation;
         this.type = type;
         this.data = data;
     }
     
-    protected Message(int operation, int type) {
+    public Message(int operation, int type) {
         this.operation = operation;
         this.type = type;
     }

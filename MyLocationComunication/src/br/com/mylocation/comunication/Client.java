@@ -53,9 +53,7 @@ public class Client {
     }
     
     public void sendMessage(Message message) throws IOException{
-    	if(output != null){
-    		output.writeObject(message);
-    	}
+//    	write.writeObject(message);
     }
     
     public void sendString(String string) throws IOException{
@@ -74,9 +72,9 @@ public class Client {
     
     public Message onMessage() throws IOException, ClassNotFoundException{
     	Message message = null;
-    	if(input != null){
-    		message = (Message) input.readObject();
-    	}
+    	
+//    	message = (Message) read.readObject();
+    	
     	return message;
     }
     
