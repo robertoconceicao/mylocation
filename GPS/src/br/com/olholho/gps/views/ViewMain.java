@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import br.com.mylocation.comunication.Client;
 import br.com.mylocation.define.ProtocolDefines;
-import br.com.olholho.R;
+import br.com.olholho.gps.R;
 
 public class ViewMain extends Activity {
     

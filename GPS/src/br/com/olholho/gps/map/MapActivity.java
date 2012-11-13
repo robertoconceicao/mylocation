@@ -5,8 +5,8 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import br.com.olholho.R;
 import br.com.olholho.gps.CustomItemizedOverlay;
+import br.com.olholho.gps.R;
 import br.com.olholho.gps.io.FileGps;
 
 import com.google.android.maps.MapController;

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.olholho"
+    package="br.com.olholho.gps"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,7 +20,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name="br.com.olholho.gps.views.ViewMain">
+            android:name=".views.ViewMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import br.com.olholho.R;
 import br.com.olholho.gps.Gps;
+import br.com.olholho.gps.R;
 
 public class LogFileActivity extends Activity {
 	private static final String TAG = "MainActivity";

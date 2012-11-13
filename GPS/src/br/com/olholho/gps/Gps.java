@@ -7,7 +7,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import br.com.olholho.R;
 import br.com.olholho.gps.io.FileGps;
 
 public class Gps extends Activity implements LocationListener {

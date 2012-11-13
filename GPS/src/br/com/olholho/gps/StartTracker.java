@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import br.com.olholho.R;
 import br.com.olholho.gps.map.MapActivity;
 
 public class StartTracker extends Activity {
