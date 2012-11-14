@@ -1,6 +1,7 @@
 package br.com.mylocation;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
@@ -20,26 +21,33 @@ public class ServerSocket {
     }
 
     private void startSocket() {
-        ServerSocketChannel server;
-        Selector selector;
+        ServerSocketChannel serverSocket = null;
+        java.net.ServerSocket socket = null;
+        InetSocketAddress address = null;
+        Selector selector = null;
+        SelectionKey key = null;
+        
         try {
-            server = ServerSocketChannel.open();
-            server.configureBlocking(false);
-            server.socket().bind(new java.net.InetSocketAddress(8000));
-            System.out.println("Server ativo na porta 8000");
+            serverSocket = ServerSocketChannel.open();
+            serverSocket.configureBlocking( false );
+            socket = serverSocket.socket();
+            address = new InetSocketAddress(8000);
+            socket.bind( address );
             selector = Selector.open();
-            server.register(selector, SelectionKey.OP_ACCEPT);
+            key = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+            System.out.println("Open socket port 8000...");
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
-        loopSocket(server, selector);
+        
+        loopSocket(serverSocket, selector);
     }
 
     private void loopSocket(ServerSocketChannel server, Selector selector) {
         while (true) {
             try {
                 selector.select();
+                //System.out.println("New event...");
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
@@ -48,6 +56,7 @@ public class ServerSocket {
             Iterator<SelectionKey> keyIterator = keys.iterator();
 
             while (keyIterator.hasNext()) {
+                //System.out.println("New iteration...");
                 SelectionKey key = (SelectionKey) keyIterator.next();
                 keyIterator.remove();
 
@@ -67,6 +76,7 @@ public class ServerSocket {
     }
 
     private void accept(ServerSocketChannel server, Selector selector) {
+        //System.out.println("Accept...");
         SocketChannel client = null;
         try {
             client = server.accept();
@@ -75,22 +85,33 @@ public class ServerSocket {
         } catch (IOException e) {
             try {
                 client.close();
+                //System.out.println("Close socket...");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
             e.printStackTrace();
         }
-        System.out.println("Conexão aceita.");
+        //System.out.println("Conexão aceita.");
     }
 
     private void read(SelectionKey key) {
+        //System.out.println("Read...");
         SocketChannel client = (SocketChannel) key.channel();
-        ByteBuffer buffer = ByteBuffer.allocate(32);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
         try {
-            client.read(buffer);
+            if((client.read(buffer) <= 0)){
+                //System.out.println("client.read(buffer) <= 0");
+                try {
+                    client.close();
+                    //System.out.println("Close socket...");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
         } catch (Exception e) {
             try {
                 client.close();
+                //System.out.println("Close socket...");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -104,13 +125,20 @@ public class ServerSocket {
         CharBuffer charBuffer;
         try {
             charBuffer = decoder.decode(buffer);
-            System.out.print(charBuffer.toString());
+            //System.out.println(charBuffer.toString());
         } catch (CharacterCodingException e) {
+            try {
+                client.close();
+                //System.out.println("Close socket...");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
 
     private void write(SelectionKey key) {
+        //System.out.println("Write...");
         SocketChannel client = (SocketChannel) key.channel();
         ByteBuffer output = (ByteBuffer) key.attachment();
         if (!output.hasRemaining()) {
@@ -121,6 +149,7 @@ public class ServerSocket {
         } catch (IOException e) {
             try {
                 client.close();
+                //System.out.println("Close socket...");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
