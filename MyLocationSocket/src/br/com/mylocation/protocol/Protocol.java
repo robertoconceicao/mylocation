@@ -27,8 +27,10 @@ public class Protocol {
 	private void switchCommand(Command command) {
 		switch (command.getOperation()) {
 		case ProtocolDefines.OPERATION_LOGIN:
+		    System.out.println("Command Login");
 			break;
 		case ProtocolDefines.OPERATION_POSITION:
+		    System.out.println("Command Position");
 			break;
 
 		default:

@@ -1,5 +1,6 @@
 package br.com.mylocation.socket;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import br.com.mylocation.bean.message.Message;
@@ -34,5 +35,10 @@ public class Client {
 
 	public void kill() {
 		System.out.println("Matando cliente...");
+		try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 }

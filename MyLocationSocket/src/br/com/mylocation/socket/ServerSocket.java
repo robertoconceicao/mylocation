@@ -18,121 +18,120 @@ import br.com.mylocation.bean.message.Message;
 
 public class ServerSocket {
 
-	private ControllerClient controllerClient;
-	private static final int READ_BUFFER_SIZE = 1024;
+    private ControllerClient controllerClient;
+    private static final int READ_BUFFER_SIZE = 1024;
 
-	public ServerSocket() {
-		controllerClient = new ControllerClient(this);
-		startSocket();
-	}
+    public ServerSocket() {
+        controllerClient = new ControllerClient(this);
+        startSocket();
+    }
 
-	private void startSocket() {
-		ServerSocketChannel serverSocket = null;
-		java.net.ServerSocket socket = null;
-		InetSocketAddress address = null;
-		Selector selector = null;
-		SelectionKey key = null;
+    private void startSocket() {
+        ServerSocketChannel serverSocket = null;
+        java.net.ServerSocket socket = null;
+        InetSocketAddress address = null;
+        Selector selector = null;
 
-		try {
-			serverSocket = ServerSocketChannel.open();
-			serverSocket.configureBlocking(false);
-			socket = serverSocket.socket();
-			address = new InetSocketAddress(8000);
-			socket.bind(address);
-			selector = Selector.open();
-			key = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-			System.out.println("Open socket port 8000...");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        try {
+            serverSocket = ServerSocketChannel.open();
+            serverSocket.configureBlocking(false);
+            socket = serverSocket.socket();
+            address = new InetSocketAddress(8000);
+            socket.bind(address);
+            selector = Selector.open();
+            serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+            System.out.println("Open socket port 8000...");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		loopSocket(serverSocket, selector);
-	}
+        loopSocket(serverSocket, selector);
+    }
 
-	private void loopSocket(ServerSocketChannel server, Selector selector) {
-		while (true) {
-			try {
-				selector.select();
-			} catch (IOException e) {
-				e.printStackTrace();
-				continue;
-			}
-			Set<SelectionKey> keys = selector.selectedKeys();
-			Iterator<SelectionKey> keyIterator = keys.iterator();
+    private void loopSocket(ServerSocketChannel server, Selector selector) {
+        while (true) {
+            try {
+                selector.select();
+            } catch (IOException e) {
+                e.printStackTrace();
+                continue;
+            }
+            Set<SelectionKey> keys = selector.selectedKeys();
+            Iterator<SelectionKey> keyIterator = keys.iterator();
 
-			while (keyIterator.hasNext()) {
-				SelectionKey key = (SelectionKey) keyIterator.next();
-				keyIterator.remove();
+            while (keyIterator.hasNext()) {
+                SelectionKey key = (SelectionKey) keyIterator.next();
+                keyIterator.remove();
 
-				if (key.isAcceptable()) {
-					accept(server, selector);
-					continue;
-				}
-				if (key.isReadable()) {
-					read(key);
-				}
-			}
-		}
-	}
+                if (key.isAcceptable()) {
+                    accept(server, selector);
+                    continue;
+                }
+                if (key.isReadable()) {
+                    read(key);
+                }
+            }
+        }
+    }
 
-	private void accept(ServerSocketChannel server, Selector selector) {
-		SocketChannel socketClient = null;
-		try {
-			socketClient = server.accept();
-			socketClient.configureBlocking(false);
-			socketClient.register(selector, SelectionKey.OP_READ);
-			controllerClient.newClient(socketClient);
-		} catch (IOException e) {
-			e.printStackTrace();
-			close(socketClient);
-		}
-	}
+    private void accept(ServerSocketChannel server, Selector selector) {
+        SocketChannel socketClient = null;
+        try {
+            socketClient = server.accept();
+            socketClient.configureBlocking(false);
+            socketClient.register(selector, SelectionKey.OP_READ);
+            controllerClient.newClient(socketClient);
+        } catch (IOException e) {
+            e.printStackTrace();
+            close(socketClient);
+        }
+    }
 
-	private void read(SelectionKey key) {
-		SocketChannel socketClient = (SocketChannel) key.channel();
-		ByteBuffer buffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
+    private void read(SelectionKey key) {
+        SocketChannel socketClient = (SocketChannel) key.channel();
+        ByteBuffer buffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
 
-		try {
-			if ((socketClient.read(buffer) <= 0)) {
-				close(socketClient);
-			} else {
-				ByteArrayInputStream byteInput = new ByteArrayInputStream(
-						buffer.array());
-				ObjectInputStream input = new ObjectInputStream(byteInput);
-				Message message = (Message) input.readObject();
-				controllerClient.read(socketClient, message);
-				input.close();
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			close(socketClient);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			close(socketClient);
-		}
-	}
+        try {
+            if ((socketClient.read(buffer) <= 0)) {
+                close(socketClient);
+            } else {
+                ByteArrayInputStream byteInput = new ByteArrayInputStream(buffer.array());
+                ObjectInputStream input = new ObjectInputStream(byteInput);
+                Object object = input.readObject();
+                if (object instanceof Message) {
+                    Message message = (Message) object;
+                    controllerClient.read(socketClient, message);
+                    input.close();
+                } else {
+                    input.close();
+                    close(socketClient);
+                }
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            close(socketClient);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            close(socketClient);
+        }
+    }
 
-	public void write(SocketChannel socketClient, Message message) {
-		try {
-			ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-			ObjectOutputStream output = new ObjectOutputStream(byteOutput);
-			output.writeObject(message);
-			output.flush();
-			ByteBuffer buffer = ByteBuffer.wrap(byteOutput.toByteArray());
-			socketClient.write(buffer);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			close(socketClient);
-		}
-	}
+    public void write(SocketChannel socketClient, Message message) {
+        try {
+            ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+            ObjectOutputStream output = new ObjectOutputStream(byteOutput);
+            output.writeObject(message);
+            output.flush();
+            ByteBuffer buffer = ByteBuffer.wrap(byteOutput.toByteArray());
+            socketClient.write(buffer);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            close(socketClient);
+        }
+    }
 
-	private void close(SocketChannel socketClient) {
-		try {
-			controllerClient.killClient(socketClient);
-			socketClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    private void close(SocketChannel socketClient) {
+        controllerClient.killClient(socketClient);
+    }
 
 }
