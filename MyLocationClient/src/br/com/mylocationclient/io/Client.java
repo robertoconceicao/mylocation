@@ -1,4 +1,4 @@
-package br.com.mylocation.comunication;
+package br.com.mylocationclient.io;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import br.com.mylocation.bean.message.Message;
+
 
 public class Client {
 
