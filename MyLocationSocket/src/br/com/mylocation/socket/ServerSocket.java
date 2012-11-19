@@ -1,22 +1,25 @@
 package br.com.mylocation.socket;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.Iterator;
 import java.util.Set;
+
+import br.com.mylocation.bean.message.Message;
 
 public class ServerSocket {
 
 	private ControllerClient controllerClient;
+	private static final int READ_BUFFER_SIZE = 1024;
 
 	public ServerSocket() {
 		controllerClient = new ControllerClient(this);
@@ -50,7 +53,6 @@ public class ServerSocket {
 		while (true) {
 			try {
 				selector.select();
-				// System.out.println("New event...");
 			} catch (IOException e) {
 				e.printStackTrace();
 				continue;
@@ -59,7 +61,6 @@ public class ServerSocket {
 			Iterator<SelectionKey> keyIterator = keys.iterator();
 
 			while (keyIterator.hasNext()) {
-				// System.out.println("New iteration...");
 				SelectionKey key = (SelectionKey) keyIterator.next();
 				keyIterator.remove();
 
@@ -69,17 +70,12 @@ public class ServerSocket {
 				}
 				if (key.isReadable()) {
 					read(key);
-					continue;
-				}
-				if (key.isWritable()) {
-					write(key);
 				}
 			}
 		}
 	}
 
 	private void accept(ServerSocketChannel server, Selector selector) {
-		// System.out.println("Accept...");
 		SocketChannel socketClient = null;
 		try {
 			socketClient = server.accept();
@@ -87,52 +83,45 @@ public class ServerSocket {
 			socketClient.register(selector, SelectionKey.OP_READ);
 			controllerClient.newClient(socketClient);
 		} catch (IOException e) {
-			// System.out.println("Close socket...");
 			e.printStackTrace();
 			close(socketClient);
 		}
-		// System.out.println("Conexão aceita.");
 	}
 
 	private void read(SelectionKey key) {
-		// System.out.println("Read...");
 		SocketChannel socketClient = (SocketChannel) key.channel();
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
+		ByteBuffer buffer = ByteBuffer.allocate(READ_BUFFER_SIZE);
+
 		try {
 			if ((socketClient.read(buffer) <= 0)) {
-				// System.out.println("client.read(buffer) <= 0");
 				close(socketClient);
+			} else {
+				ByteArrayInputStream byteInput = new ByteArrayInputStream(
+						buffer.array());
+				ObjectInputStream input = new ObjectInputStream(byteInput);
+				Message message = (Message) input.readObject();
+				controllerClient.read(socketClient, message);
+				input.close();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 			close(socketClient);
-			return;
-		}
-
-		buffer.flip();
-		Charset charset = Charset.forName("UTF-8");
-		CharsetDecoder decoder = charset.newDecoder();
-		CharBuffer charBuffer;
-		try {
-			charBuffer = decoder.decode(buffer);
-			// System.out.println(charBuffer.toString());
-		} catch (CharacterCodingException e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			close(socketClient);
 		}
 	}
 
-	private void write(SelectionKey key) {
-		// System.out.println("Write...");
-		SocketChannel socketClient = (SocketChannel) key.channel();
-		ByteBuffer output = (ByteBuffer) key.attachment();
-		if (!output.hasRemaining()) {
-			output.rewind();
-		}
+	public void write(SocketChannel socketClient, Message message) {
 		try {
-			socketClient.write(output);
-		} catch (IOException e) {
-			e.printStackTrace();
+			ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+			ObjectOutputStream output = new ObjectOutputStream(byteOutput);
+			output.writeObject(message);
+			output.flush();
+			ByteBuffer buffer = ByteBuffer.wrap(byteOutput.toByteArray());
+			socketClient.write(buffer);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 			close(socketClient);
 		}
 	}

@@ -4,6 +4,8 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.mylocation.bean.message.Message;
+
 public class ControllerClient {
 
 	private ServerSocket serverSocket;
@@ -15,16 +17,19 @@ public class ControllerClient {
 	}
 
 	public void newClient(SocketChannel socket) {
-		Client client = new Client(this);
+		Client client = new Client(this, socket);
 		clients.put(socket, client);
 	}
 
-	public void read() {
-
+	public void read(SocketChannel socket, Message message) {
+		Client client = clients.get(socket);
+		if (client != null) {
+			client.read(message);
+		}
 	}
 
-	public void write() {
-
+	public void write(Client client, Message message) {
+		serverSocket.write(client.getSocket(), message);
 	}
 
 	public void killClient(SocketChannel socket) {
