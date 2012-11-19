@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.R;
 import br.com.mylocationclient.io.Client;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
 					dismissDialog(0);
 					Toast.makeText(v.getContext(), "Conectado", Toast.LENGTH_SHORT).show();
 					buttonConnect.setText("Conectado");
+					client.sendMessage(new Message(ProtocolDefines.OPERATION_LOGIN, ProtocolDefines.TYPE_COMMAND));
 				} catch (IOException e) {
 					dismissDialog(0);
 					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

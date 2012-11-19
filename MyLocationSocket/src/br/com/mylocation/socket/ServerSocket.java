@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.define.ProtocolDefines;
 
 public class ServerSocket {
 
@@ -36,11 +37,11 @@ public class ServerSocket {
             serverSocket = ServerSocketChannel.open();
             serverSocket.configureBlocking(false);
             socket = serverSocket.socket();
-            address = new InetSocketAddress(8000);
+            address = new InetSocketAddress(ProtocolDefines.PORT);
             socket.bind(address);
             selector = Selector.open();
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Open socket port 8000...");
+            System.out.println("Open socket port "+ProtocolDefines.PORT+"...");
         } catch (IOException e) {
             e.printStackTrace();
         }

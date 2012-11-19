@@ -21,14 +21,12 @@ public class FileGps {
 	private static final int INDEX_SPEED = 2;
 	private static final int INDEX_ALTITUDE = 3;
 	
-	private String fileName;
 	private String filePath;
 	private static final String DIRECTORY = "RecordGps";
 	private File file;
 	
 	public FileGps(String fileName){
 		this.filePath = Environment.getExternalStorageDirectory().getPath() + File.separator + DIRECTORY;
-		this.fileName = fileName;
 		
 		// cria o diretorio
 		file = new File ( filePath) ;
