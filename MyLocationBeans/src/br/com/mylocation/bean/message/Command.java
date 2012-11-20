@@ -25,6 +25,11 @@ public class Command
         super(operation, type, data);
         this.rid = rid;
     }
+    
+    protected Command(int rid, int operation, int type) {
+        super(operation, type);
+        this.rid = rid;
+    }
 
     public int getRid() {
         return rid;

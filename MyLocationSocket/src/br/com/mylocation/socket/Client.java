@@ -16,19 +16,19 @@ public class Client {
 		System.out.println("Novo cliente...");
 		this.controllerClient = controllerClient;
 		this.socket = socket;
-		protocol = new ProtocolParser();
+		protocol = new ProtocolParser(this);
 	}	
 
 	public SocketChannel getSocket() {
 		return socket;
 	}
 	
-	public void read(Message message) {
+	public void receiveMessage(Message message) {
 		System.out.println("Cliente recebeu mensagem...");
 		protocol.switchMessage(message);
 	}
 
-	public void write(Message message) {
+	public void sendMessage(Message message) {
 		System.out.println("Cliente escreveu mensagem...");
 		controllerClient.write(this, message);
 	}

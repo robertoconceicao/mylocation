@@ -24,7 +24,7 @@ public class ControllerClient {
 	public void read(SocketChannel socket, Message message) {
 		Client client = clients.get(socket);
 		if (client != null) {
-			client.read(message);
+			client.receiveMessage(message);
 		}
 	}
 
