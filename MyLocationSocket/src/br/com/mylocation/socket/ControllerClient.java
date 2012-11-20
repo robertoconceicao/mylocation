@@ -13,7 +13,7 @@ public class ControllerClient {
 
 	public ControllerClient(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
-		clients = new HashMap<>();
+		clients = new HashMap<SocketChannel, Client>();
 	}
 
 	public void newClient(SocketChannel socket) {
