@@ -20,6 +20,7 @@ public class ServerSocket {
 
     private ControllerClient controllerClient;
     private static final int READ_BUFFER_SIZE = 1024;
+    private static final int PORT_SERVER_SOCKET = 8000;
 
     public ServerSocket() {
         controllerClient = new ControllerClient(this);
@@ -36,11 +37,11 @@ public class ServerSocket {
             serverSocket = ServerSocketChannel.open();
             serverSocket.configureBlocking(false);
             socket = serverSocket.socket();
-            address = new InetSocketAddress(8000);
+            address = new InetSocketAddress(PORT_SERVER_SOCKET);
             socket.bind(address);
             selector = Selector.open();
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Open socket port 8000...");
+            System.out.println("Open socket port " + PORT_SERVER_SOCKET);
         } catch (IOException e) {
             e.printStackTrace();
         }

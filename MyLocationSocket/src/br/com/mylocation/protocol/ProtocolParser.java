@@ -6,7 +6,7 @@ import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.ProtocolDefines;
 
-public class Protocol {
+public class ProtocolParser {
 
 	public void switchMessage(Message message) {
 		switch (message.getType()) {
@@ -27,29 +27,29 @@ public class Protocol {
 	private void switchCommand(Command command) {
 		switch (command.getOperation()) {
 		case ProtocolDefines.OPERATION_LOGIN:
-		    System.out.println("Command Login");
+			System.out.println("Command Login");
 			break;
-		case ProtocolDefines.OPERATION_POSITION:
-		    System.out.println("Command Position");
-			break;
-
 		default:
+			System.out.println("Command não tratado!");
 			break;
 		}
 	}
 
 	private void switchCommandResponse(CommandResponse commandResponse) {
 		switch (commandResponse.getOperation()) {
-		case ProtocolDefines.OPERATION_LOGIN:
-			break;
 		default:
+			System.out.println("CommandResponse não tratado!");
 			break;
 		}
 	}
 
 	private void switchEvent(Event event) {
 		switch (event.getOperation()) {
+		case ProtocolDefines.OPERATION_POSITION:
+			System.out.println("Event Position");
+			break;
 		default:
+			System.out.println("Event não tratado!");
 			break;
 		}
 	}

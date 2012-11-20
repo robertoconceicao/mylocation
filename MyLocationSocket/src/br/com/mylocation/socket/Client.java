@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import br.com.mylocation.bean.message.Message;
-import br.com.mylocation.protocol.Protocol;
+import br.com.mylocation.protocol.ProtocolParser;
 
 public class Client {
 
-	private Protocol protocol;
+	private ProtocolParser protocol;
 	private ControllerClient controllerClient;
 	private SocketChannel socket;
 
@@ -16,7 +16,7 @@ public class Client {
 		System.out.println("Novo cliente...");
 		this.controllerClient = controllerClient;
 		this.socket = socket;
-		protocol = new Protocol();
+		protocol = new ProtocolParser();
 	}	
 
 	public SocketChannel getSocket() {
