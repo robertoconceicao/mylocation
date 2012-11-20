@@ -8,37 +8,47 @@ import br.com.mylocation.protocol.ProtocolParser;
 
 public class Client {
 
-	private ProtocolParser protocol;
+	private ProtocolParser protocolParser;
 	private ControllerClient controllerClient;
 	private SocketChannel socket;
+	private ClientInfo clientInfo;
 
 	public Client(ControllerClient controllerClient, SocketChannel socket) {
 		System.out.println("Novo cliente...");
 		this.controllerClient = controllerClient;
 		this.socket = socket;
-		protocol = new ProtocolParser(this);
-	}	
+		protocolParser = new ProtocolParser(this);
+		clientInfo = new ClientInfo();
+	}
+
+	public ClientInfo getClientInfo() {
+		return clientInfo;
+	}
 
 	public SocketChannel getSocket() {
 		return socket;
 	}
-	
+
 	public void receiveMessage(Message message) {
 		System.out.println("Cliente recebeu mensagem...");
-		protocol.switchMessage(message);
+		protocolParser.switchMessage(message);
 	}
 
 	public void sendMessage(Message message) {
 		System.out.println("Cliente escreveu mensagem...");
-		controllerClient.write(this, message);
+		controllerClient.sendMessage(this, message);
 	}
 
 	public void kill() {
 		System.out.println("Matando cliente...");
 		try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		protocolParser = null;
+		controllerClient = null;
+		socket = null;
+		clientInfo = null;
 	}
 }

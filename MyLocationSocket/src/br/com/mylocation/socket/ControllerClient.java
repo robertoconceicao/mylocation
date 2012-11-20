@@ -21,14 +21,14 @@ public class ControllerClient {
 		clients.put(socket, client);
 	}
 
-	public void read(SocketChannel socket, Message message) {
+	public void receiveMessage(SocketChannel socket, Message message) {
 		Client client = clients.get(socket);
 		if (client != null) {
 			client.receiveMessage(message);
 		}
 	}
 
-	public void write(Client client, Message message) {
+	public void sendMessage(Client client, Message message) {
 		serverSocket.write(client.getSocket(), message);
 	}
 

@@ -1,6 +1,7 @@
 package br.com.mylocation.socket;
 
 import java.util.Observable;
+import java.util.UUID;
 
 import br.com.mylocation.bean.message.event.Position;
 
@@ -11,14 +12,15 @@ public class ClientInfo extends Observable {
 	private Position position;
 
 	public ClientInfo() {
-
+		String randomKey = createKey();
+		setKey(randomKey);
 	}
 
 	public String getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
+	private void setKey(String key) {
 		this.key = key;
 		notifyChange();
 	}
@@ -39,6 +41,12 @@ public class ClientInfo extends Observable {
 	public void setPosition(Position position) {
 		this.position = position;
 		notifyChange();
+	}
+
+	private String createKey() {
+		UUID uuid = UUID.randomUUID();
+		String randomKey = uuid.toString();
+		return randomKey.substring(0, 8);
 	}
 
 	private void notifyChange() {
