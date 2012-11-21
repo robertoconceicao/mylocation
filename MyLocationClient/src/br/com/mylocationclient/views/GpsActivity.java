@@ -1,7 +1,5 @@
 package br.com.mylocationclient.views;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -9,20 +7,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.event.Position;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.R;
-import br.com.mylocationclient.io.Client;
+import br.com.mylocationclient.app.Client;
 
 public class GpsActivity extends Activity implements LocationListener {
 
 	private TextView latitudeText;
 	private TextView longitudeText;
 	private LocationManager locationManager;
-	
-	private Client client;
+	private Client client; 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +27,7 @@ public class GpsActivity extends Activity implements LocationListener {
 		
 		//pega a referencia do client 
 		Bundle extras = getIntent().getExtras();
-		client = (Client) extras.getSerializable("client");
+//		client = (SokectClient) extras.getSerializable("client");
 
 		latitudeText = (TextView) findViewById(R.id.infoLatitude);
 		longitudeText = (TextView) findViewById(R.id.infoLongitude);
@@ -65,12 +61,12 @@ public class GpsActivity extends Activity implements LocationListener {
 											 location.getAltitude(), 
 											 System.currentTimeMillis());
 			Event eventPosition = new Event(ProtocolDefines.OPERATION_POSITION, position);
-			try {
-				client.sendMessage(eventPosition);
-				Toast.makeText(this, "Enviando Position para servidor ", Toast.LENGTH_SHORT).show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				client.sendMessage(eventPosition);
+//				Toast.makeText(this, "Enviando Position para servidor ", Toast.LENGTH_SHORT).show();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 		}
 	}
 
