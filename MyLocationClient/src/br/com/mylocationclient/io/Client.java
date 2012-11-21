@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -15,8 +16,12 @@ import br.com.mylocation.bean.message.commandresponse.LoginResponse;
 import br.com.mylocation.define.ProtocolDefines;
 
 
-public class Client {
+public class Client implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4565273806467925920L;
 	private SocketChannel socketChannel;
 	
 	public Client(){

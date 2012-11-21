@@ -5,12 +5,13 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.R;
 import br.com.mylocationclient.io.Client;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
 		
 		client = new Client();
 		addListenerOnButtonConnect();
+		addListenerOnButtonTrack();
 	}
 
 	private void addListenerOnButtonConnect() {
@@ -33,27 +35,29 @@ public class MainActivity extends Activity {
 		buttonConnect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showDialog(0);
 				try {
 					client.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);
-					dismissDialog(0);
-					Toast.makeText(v.getContext(), "Conectado", Toast.LENGTH_SHORT).show();
 					buttonConnect.setText("Conectado");
-					client.sendMessage(new Message(ProtocolDefines.OPERATION_LOGIN, ProtocolDefines.TYPE_COMMAND));
+					client.sendMessage(new Command(1, ProtocolDefines.OPERATION_LOGIN));
+					client.onMessage();
+					
+					Toast.makeText(v.getContext(), "Conectado", Toast.LENGTH_SHORT).show();
 				} catch (IOException e) {
-					dismissDialog(0);
 					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 				}				
 			}
 		});
 	}
 	
-	// Method to create a progress bar dialog of either spinner or horizontal type
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        progDialog = new ProgressDialog(this);
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDialog.setMessage(R.string.connect+"...");
-        return progDialog;
-    }
+	private void addListenerOnButtonTrack() {
+		final Button buttonTrack = (Button) findViewById(R.id.buttonTrack);
+		buttonTrack.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
+				intent.putExtra("client", client);
+				startActivity(intent);
+			}
+		});
+	}
 }
