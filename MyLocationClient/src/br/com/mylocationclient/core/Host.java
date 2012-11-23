@@ -1,6 +1,7 @@
 package br.com.mylocationclient.core;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
@@ -9,8 +10,12 @@ import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.io.SokectClient;
 
-public abstract class Host {
+public abstract class Host implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8502087393429369444L;
 	protected SokectClient socket;
 	private String name;	
 	

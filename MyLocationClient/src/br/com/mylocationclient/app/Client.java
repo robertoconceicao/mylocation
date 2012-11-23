@@ -15,6 +15,10 @@ import br.com.mylocationclient.views.MainActivity;
 
 public class Client extends Host implements ProtocolDefines {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2440942261393083891L;
 	private String key;
 	private MainActivity mainActivity;
 	
@@ -41,10 +45,15 @@ public class Client extends Host implements ProtocolDefines {
 
 	private void onLogin(CommandResponse response){
 		if(response.getData() != null){
-			LoginResponse loginResponse = (LoginResponse)response.getData();
+			final LoginResponse loginResponse = (LoginResponse)response.getData();
 			key = loginResponse.getKey();
 			
-			mainActivity.dialog("Conectado key: "+loginResponse.getKey());
+			mainActivity.runOnUiThread ( new Runnable () {
+				@Override
+				public void run () {
+					mainActivity.dialog("Conectado key: "+loginResponse.getKey());
+				}
+			});
 		}
 	}
 	

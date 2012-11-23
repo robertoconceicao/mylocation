@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
-//				intent.putExtra("client", client);
+				intent.putExtra("client", client);
 				
 				startActivity(intent);
 			}
