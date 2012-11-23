@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.event.Position;
 import br.com.mylocation.define.ProtocolDefines;
@@ -27,7 +28,7 @@ public class GpsActivity extends Activity implements LocationListener {
 		
 		//pega a referencia do client 
 		Bundle extras = getIntent().getExtras();
-//		client = (SokectClient) extras.getSerializable("client");
+		client = (Client) extras.getSerializable("client");
 
 		latitudeText = (TextView) findViewById(R.id.infoLatitude);
 		longitudeText = (TextView) findViewById(R.id.infoLongitude);
@@ -72,10 +73,12 @@ public class GpsActivity extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
+		Toast.makeText(this, provider+" desabilitado", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		Toast.makeText(this, provider+" habilitado", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
