@@ -13,7 +13,7 @@ import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.core.Host;
 import br.com.mylocationclient.views.MainActivity;
 
-public class Client extends Host implements ProtocolDefines {
+public class Client extends Host  {
 	
 	/**
 	 * 
@@ -29,7 +29,7 @@ public class Client extends Host implements ProtocolDefines {
 
 	public void connect() {
 		try {
-			socket.connect(HOST_NAME, PORT);
+			socket.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);
 			sendLogin();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class Client extends Host implements ProtocolDefines {
     }
 	
 	private void sendLogin() {
-		Command command = new Command(OPERATION_LOGIN);
+		Command command = new Command(ProtocolDefines.OPERATION_LOGIN);
 		Login login = new Login("Teste");
 		command.setData(login);
 		sendCommand(command);
@@ -58,7 +58,7 @@ public class Client extends Host implements ProtocolDefines {
 	}
 	
 	public void sendPosition(Position position){
-		Event event = new Event(OPERATION_POSITION);
+		Event event = new Event(ProtocolDefines.OPERATION_POSITION);
 		event.setData(position);
 		sendEvent(event);
 	}
@@ -66,7 +66,7 @@ public class Client extends Host implements ProtocolDefines {
 	@Override
 	public void onResponse(CommandResponse response) {		
 		switch(response.getOperation()){
-			case OPERATION_LOGIN:
+			case ProtocolDefines.OPERATION_LOGIN:
 				System.out.println("Resposta de login");
 				onLogin(response);
 				break;
@@ -87,6 +87,10 @@ public class Client extends Host implements ProtocolDefines {
 		return null;
 	}
 
+	public boolean isConnected(){
+		return socket.isConnected();
+	}
+	
 	public String getKey() {
 		return key;
 	}

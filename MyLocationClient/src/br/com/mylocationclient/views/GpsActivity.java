@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.event.Position;
 import br.com.mylocation.define.ProtocolDefines;
@@ -28,8 +29,9 @@ public class GpsActivity extends Activity implements LocationListener {
 		
 		//pega a referencia do client 
 		Bundle extras = getIntent().getExtras();
+		
 		client = (Client) extras.getSerializable("client");
-
+		
 		latitudeText = (TextView) findViewById(R.id.infoLatitude);
 		longitudeText = (TextView) findViewById(R.id.infoLongitude);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
