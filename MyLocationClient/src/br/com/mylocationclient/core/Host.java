@@ -1,7 +1,7 @@
 package br.com.mylocationclient.core;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.util.HashMap;
 
 import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
@@ -10,23 +10,22 @@ import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.io.SokectClient;
 
-public abstract class Host implements Serializable {
+public abstract class Host {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8502087393429369444L;
 	protected SokectClient socket;
 	private String name;	
+	private HashMap<Integer, RequestInstance> mapRequests;
 	
 	public Host(String name){
 		this.name = name;
-		socket = new SokectClient(this);		
+		socket = new SokectClient(this);
+		mapRequests = new HashMap<Integer, RequestInstance>();
 	}
 	
 	public Host(String name, SokectClient client){
 		this.name = name;
 		this.socket = client;
+		mapRequests = new HashMap<Integer, RequestInstance>();
 	}
     
 	/**
@@ -43,7 +42,7 @@ public abstract class Host implements Serializable {
     				sendResponse(response);
     				break;
 	    		case ProtocolDefines.TYPE_COMMAND_RESPONSE:
-	    			onResponse((CommandResponse) message);
+	    			onCommandResponse((CommandResponse) message);
 	    			break;    		
 	    		case ProtocolDefines.TYPE_EVENT:
 	    			onEvent((Event)message);
@@ -55,6 +54,23 @@ public abstract class Host implements Serializable {
     	}    	
     }
 
+    /**
+     * Verifica se a resposta que veio é de uma RequestInstance ou se é de um 
+     * comando enviado via sendCommand, e então entrega a mensagem ao metodo 
+     * responsável.
+     * @param response
+     */
+    private void onCommandResponse(CommandResponse response){
+    	RequestInstance request = mapRequests.get(response.getRid());
+    	if(request != null){
+    		request.onRequestInstance(response);
+    		removeRequestInstance(request);
+    	}else{
+    		onResponse(response);
+    	}
+    }
+    
+    
     private void write(Message message){
     	if(socket != null){
 			socket.write(message);
@@ -71,6 +87,16 @@ public abstract class Host implements Serializable {
 		write(command);
     }
 	
+    /**
+     * Envia um comando para o servidor que exige uma resposta que irá cair no metodo
+     * (callback) onResponse
+     * @param command
+     */
+    public void sendRequestInstance(RequestInstance requestInstance){
+		addRequestInstance(requestInstance);
+		sendCommand(requestInstance.getCommand());
+    }
+    
     /**
      * Envia um comando para o servidor que exige uma resposta que irá cair no metodo
      * (callback) onResponse
@@ -124,5 +150,13 @@ public abstract class Host implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void addRequestInstance(RequestInstance requestInstance){
+		mapRequests.put(requestInstance.getCommand().getRid(), requestInstance);
+	}
+	
+	public boolean removeRequestInstance(RequestInstance requestInstance){
+		return (mapRequests.remove(requestInstance.getCommand().getRid()) != null);
 	}
 }

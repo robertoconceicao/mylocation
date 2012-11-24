@@ -8,10 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-import br.com.mylocation.bean.message.Command;
-import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.event.Position;
-import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.R;
 import br.com.mylocationclient.app.Client;
 
@@ -27,10 +24,7 @@ public class GpsActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gps);
 		
-		//pega a referencia do client 
-		Bundle extras = getIntent().getExtras();
-		
-		client = (Client) extras.getSerializable("client");
+		client = Client.getInstance();
 		
 		latitudeText = (TextView) findViewById(R.id.infoLatitude);
 		longitudeText = (TextView) findViewById(R.id.infoLongitude);
@@ -63,13 +57,7 @@ public class GpsActivity extends Activity implements LocationListener {
 											 location.getAccuracy(), 
 											 location.getAltitude(), 
 											 System.currentTimeMillis());
-			Event eventPosition = new Event(ProtocolDefines.OPERATION_POSITION, position);
-//			try {
-//				client.sendMessage(eventPosition);
-//				Toast.makeText(this, "Enviando Position para servidor ", Toast.LENGTH_SHORT).show();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+			client.sendPosition(position);
 		}
 	}
 

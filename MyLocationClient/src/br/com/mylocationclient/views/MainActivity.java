@@ -1,23 +1,20 @@
 package br.com.mylocationclient.views;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import br.com.mylocation.bean.message.Command;
-import br.com.mylocation.bean.message.Event;
-import br.com.mylocation.bean.message.event.Position;
+import br.com.mylocation.bean.message.CommandResponse;
+import br.com.mylocation.bean.message.command.Login;
+import br.com.mylocation.bean.message.commandresponse.LoginResponse;
 import br.com.mylocation.define.ProtocolDefines;
 import br.com.mylocationclient.R;
 import br.com.mylocationclient.app.Client;
+import br.com.mylocationclient.core.RequestInstance;
 
 public class MainActivity extends Activity {
 
@@ -28,7 +25,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		client = new Client(this);
+		client = Client.getInstance();
+		client.setMainActivity(this);
 
 		addListenerOnButtonConnect();
 		addListenerOnButtonTrack();
@@ -39,7 +37,7 @@ public class MainActivity extends Activity {
 		buttonConnect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				client.connect();
+				sendLogin();
 			}
 		});
 	}
@@ -49,65 +47,59 @@ public class MainActivity extends Activity {
 		buttonTrack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
-//				intent.putExtra("client", client);
-//
-//				startActivity(intent);
-				SendGpsEventTask task = new SendGpsEventTask();
-				task.execute((Void)null);
+				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
 
-	public void dialog(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-	}
+	public void sendLogin() {
+		/*
+		 * class interna que encapsula o command de login
+		 */
+		class RequestLogin extends RequestInstance {
+			public RequestLogin(Command command) {
+				super(command);
+			}
 
-	
-	class SendGpsEventTask extends AsyncTask<Void, Void, Void> implements
-			LocationListener {
-
-		private LocationManager locationManager;
-
-		// private Client client;
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
-
-			while(client != null && client.isConnected()) { }
-			
-			return null;
-		}
-
-		@Override
-		public void onLocationChanged(Location location) {
-			if (client != null) {
-				Position position = new Position(location.getLatitude(),
-						location.getLongitude(), location.getSpeed(),
-						location.getAccuracy(), location.getAltitude(),
-						System.currentTimeMillis());
-				client.sendPosition(position);
+			@Override
+			public void onRequestInstance(CommandResponse response) {
+				onLogin(response);
 			}
 		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-//			Toast.makeText(MainActivity.this, provider + " desabilitado",
-//					Toast.LENGTH_SHORT).show();
+		try {
+			client.connect();
+			Command command = new Command(ProtocolDefines.OPERATION_LOGIN);
+			Login login = new Login("Teste");
+			command.setData(login);
+			/*
+			 * encapsulou o command numa Instance e envia para o server. A
+			 * resposta vai cair no metodo onRequestInstance dessa instancia
+			 */
+			client.sendRequestInstance(new RequestLogin(command));
+		} catch (Exception e) {
+			dialog(e.getMessage());
 		}
+	}
 
-		@Override
-		public void onProviderEnabled(String provider) {
-//			Toast.makeText(MainActivity.this, provider + " habilitado",
-//					Toast.LENGTH_SHORT).show();
+	public void onLogin(CommandResponse response) {
+		if (response.getStatus() == ProtocolDefines.STATUS_SUCCESS 
+			&& response.getData() != null) {
+			final LoginResponse loginResponse = (LoginResponse) response.getData();
+			client.setKey(loginResponse.getKey());
+			dialog("Conectado key: " + loginResponse.getKey());
+		}else{
+			dialog("Erro no commando de login");
 		}
+	}
 
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
+	public void dialog(final String message) {
+		Runnable run = new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();		
+			}
+		};		
+		runOnUiThread(run);		
 	}
 }
