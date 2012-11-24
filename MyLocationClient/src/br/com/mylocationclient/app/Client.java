@@ -21,12 +21,20 @@ public class Client extends Host  {
 	private static final long serialVersionUID = 2440942261393083891L;
 	private String key;
 	private MainActivity mainActivity;
+	private static Client client = new Client();
 	
-	public Client(MainActivity mainActivity) {		
+	private Client() {		
 		super("Client");
-		this.mainActivity = mainActivity;
+		//this.mainActivity = mainActivity;
 	}
 
+	public static Client getInstance(){
+		if(client == null){
+			client = new Client();
+		}
+		return client;
+	}
+	
 	public void connect() {
 		try {
 			socket.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);
@@ -97,5 +105,13 @@ public class Client extends Host  {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public MainActivity getMainActivity() {
+		return mainActivity;
+	}
+
+	public void setMainActivity(MainActivity mainActivity) {
+		this.mainActivity = mainActivity;
 	}
 }
