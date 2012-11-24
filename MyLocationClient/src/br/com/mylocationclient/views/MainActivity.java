@@ -93,7 +93,13 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void dialog(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	public void dialog(final String message) {
+		Runnable run = new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();		
+			}
+		};		
+		runOnUiThread(run);		
 	}
 }
