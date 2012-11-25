@@ -1,4 +1,4 @@
-package br.com.mylocation.socket;
+package br.com.mylocation.model;
 
 import java.util.Observable;
 import java.util.UUID;
