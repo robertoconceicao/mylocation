@@ -3,3 +3,6 @@ GPS/project.properties
 
 MapView/.classpath
 MapView/.project
+MapView/.settings
+.metadata
+*.class
