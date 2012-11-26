@@ -20,10 +20,10 @@ public class ControllerServlet extends HttpServlet {
 
 	public ControllerServlet() {
 		super();
-		launchSystem();
 	}
 
 	public void init(ServletConfig config) throws ServletException {
+	    launchSystem();
 	}
 	
 	private void launchSystem(){

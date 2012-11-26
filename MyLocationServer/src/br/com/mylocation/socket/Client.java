@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.model.ClientInfo;
 import br.com.mylocation.protocol.ProtocolParser;
 
 public class Client {
