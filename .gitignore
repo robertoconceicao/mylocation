@@ -6,3 +6,10 @@ MapView/.project
 MapView/.settings
 .metadata
 *.class
+
+MyLocationClient/.classpath
+MyLocationClient/bin/
+
+MyLocationServer/.classpath
+
+MyLocationBeans/bin/

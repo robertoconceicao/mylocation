@@ -1,10 +1,12 @@
 package br.com.mylocation.socket;
 
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.model.ClientInfo;
 
 public class ControllerClient {
 
@@ -15,9 +17,20 @@ public class ControllerClient {
 		this.serverSocket = serverSocket;
 		clients = new HashMap<SocketChannel, Client>();
 	}
-	
+
 	public ControllerClient() {
 		clients = new HashMap<SocketChannel, Client>();
+	}
+
+	public List<ClientInfo> getClientInfoList() {
+		List<ClientInfo> clientsList = new ArrayList<>();
+
+		for (Map.Entry<SocketChannel, Client> entry : clients.entrySet()) {
+			Client client = entry.getValue();
+			clientsList.add(client.getClientInfo());
+		}
+
+		return clientsList;
 	}
 
 	public void newClient(SocketChannel socket) {
@@ -46,5 +59,5 @@ public class ControllerClient {
 	public void setServerSocket(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 	}
-	
+
 }
