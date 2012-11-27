@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.controller.UserLocationManagerServlet;
 import br.com.mylocation.model.ClientInfo;
 
 public class ControllerClient {
 
+    private UserLocationManagerServlet userLocationManagerServlet;
 	private ServerSocket serverSocket;
 	private Map<SocketChannel, Client> clients;
 
@@ -36,6 +38,8 @@ public class ControllerClient {
 	public void newClient(SocketChannel socket) {
 		Client client = new Client(this, socket);
 		clients.put(socket, client);
+		client.getClientInfo().addObserver(userLocationManagerServlet);
+		client.getClientInfo().notifyChange();
 	}
 
 	public void receiveMessage(SocketChannel socket, Message message) {
@@ -60,4 +64,8 @@ public class ControllerClient {
 		this.serverSocket = serverSocket;
 	}
 
+    public void setUserLocationManagerServlet(UserLocationManagerServlet userLocationManagerServlet) {
+        this.userLocationManagerServlet = userLocationManagerServlet;
+    }
+	
 }

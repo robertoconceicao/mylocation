@@ -42,6 +42,7 @@ public class Client {
 
 	public void kill() {
 		System.out.println("Matando cliente...");
+		clientInfo.kill();
 		try {
 			socket.close();
 		} catch (IOException e) {

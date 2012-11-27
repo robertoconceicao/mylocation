@@ -16,6 +16,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServerSocket serverSocket;
 	private ControllerClient controllerClient;
+	private UserLocationManagerServlet userLocationManagerServlet;
 
 	public ControllerServlet() {
 		super();
@@ -26,10 +27,12 @@ public class ControllerServlet extends HttpServlet {
 	}
 	
 	private void launchSystem(){
-		System.out.println("Iniciando sistema...");
+		System.out.println("Iniciando sistema...");		
 		controllerClient = new ControllerClient();
+		userLocationManagerServlet = new UserLocationManagerServlet(controllerClient);
 		serverSocket = new ServerSocket(controllerClient);
 		controllerClient.setServerSocket(serverSocket);
+		controllerClient.setUserLocationManagerServlet(userLocationManagerServlet);
 	}
 
 	public void destroy() {

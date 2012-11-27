@@ -20,13 +20,13 @@ public class MyLocationServerListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		// TODO Auto-generated method stub
-		ServletContext context = event.getServletContext();
-		System.out.println("Iniciando sistema...");
-		controllerClient = new ControllerClient();
-		controllerClient.setServerSocket(new ServerSocket(controllerClient));
-		System.out.println("Sistema inicializado.");
-		
-		context.setAttribute("ControllerClient", controllerClient);
+//		ServletContext context = event.getServletContext();
+//		System.out.println("Iniciando sistema...");
+//		controllerClient = new ControllerClient();
+//		controllerClient.setServerSocket(new ServerSocket(controllerClient));
+//		System.out.println("Sistema inicializado.");
+//		
+//		context.setAttribute("ControllerClient", controllerClient);
 	}
 
 }
