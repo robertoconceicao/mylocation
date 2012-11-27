@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
@@ -97,6 +98,8 @@ public class MainActivity extends Activity {
 		Runnable run = new Runnable() {
 			@Override
 			public void run() {
+				TextView textKey = (TextView) findViewById(R.id.text_key);
+				textKey.setText(message);
 				Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();		
 			}
 		};		
