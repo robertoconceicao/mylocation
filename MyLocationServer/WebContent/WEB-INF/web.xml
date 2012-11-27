@@ -3,5 +3,9 @@
   <display-name>MyLocationServer</display-name>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+  <listener>
+    <listener-class>br.com.mylocation.servlet.listener.MyLocationServerListener</listener-class>
+  </listener>
 </web-app>
