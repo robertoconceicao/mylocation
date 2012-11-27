@@ -20,21 +20,22 @@ public class ControllerServlet extends HttpServlet {
 
 	public ControllerServlet() {
 		super();
-		startSystem();
 	}
 
 	public void init(ServletConfig config) throws ServletException {
+	    launchSystem();
 	}
 	
-	private void startSystem(){
+	private void launchSystem(){
 		System.out.println("Iniciando sistema...");
 		controllerClient = new ControllerClient();
 		serverSocket = new ServerSocket(controllerClient);
 		controllerClient.setServerSocket(serverSocket);
-		System.out.println("Sistema inicializado.");
 	}
 
 	public void destroy() {
+	    System.out.println("Finalizando sistema...");
+	    serverSocket.destroy();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
