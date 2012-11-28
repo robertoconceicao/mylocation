@@ -4,22 +4,23 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.controller.UserLocationManagerServlet;
 import br.com.mylocation.model.ClientInfo;
-import br.com.mylocation.protocol.ProtocolParser;
+import br.com.mylocation.protocol.SwitchMessages;
 
 public class Client {
 
-	private ProtocolParser protocolParser;
+	private SwitchMessages switchMessages;
 	private ControllerClient controllerClient;
 	private SocketChannel socket;
 	private ClientInfo clientInfo;
 
-	public Client(ControllerClient controllerClient, SocketChannel socket) {
+	public Client(ControllerClient controllerClient, SocketChannel socket, UserLocationManagerServlet userLocationManagerServlet) {
 		System.out.println("Novo cliente...");
 		this.controllerClient = controllerClient;
 		this.socket = socket;
-		protocolParser = new ProtocolParser(this);
-		clientInfo = new ClientInfo();
+		switchMessages = new SwitchMessages(this);
+		clientInfo = new ClientInfo(userLocationManagerServlet);
 	}
 
 	public ClientInfo getClientInfo() {
@@ -32,12 +33,17 @@ public class Client {
 
 	public void receiveMessage(Message message) {
 		System.out.println("Cliente recebeu mensagem...");
-		protocolParser.switchMessage(message);
+		switchMessages.switchMessage(message);
 	}
 
 	public void sendMessage(Message message) {
 		System.out.println("Cliente escreveu mensagem...");
 		controllerClient.sendMessage(this, message);
+	}
+	
+	public void removeAndKill(){
+		controllerClient.killClient(socket);
+		kill();
 	}
 
 	public void kill() {
@@ -48,7 +54,7 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		protocolParser = null;
+		switchMessages = null;
 		controllerClient = null;
 		socket = null;
 		clientInfo = null;

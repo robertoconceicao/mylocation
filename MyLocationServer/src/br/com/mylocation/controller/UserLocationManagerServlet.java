@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 import br.com.mylocation.model.ClientInfo;
 import br.com.mylocation.socket.ControllerClient;
 
@@ -71,13 +71,13 @@ public class UserLocationManagerServlet
         System.out.println("Um ClientInfo foi alterado! Action: " + clientInfo.getAction());
 
         switch (clientInfo.getAction()) {
-            case ProtocolDefines.ACTION_INSERT:
+            case GlobalDefines.ACTION_INSERT:
                 //insere no mapa
                 break;
-            case ProtocolDefines.ACTION_UPDATE:
+            case GlobalDefines.ACTION_UPDATE:
                 //atualiza dados do client no mapa
                 break;
-            case ProtocolDefines.ACTION_REMOVE:
+            case GlobalDefines.ACTION_REMOVE:
                 //remove do mapa
                 break;
             default:

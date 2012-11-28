@@ -1,6 +1,6 @@
 package br.com.mylocation.bean.message;
 
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 
 public class CommandResponse extends Command {
 
@@ -11,13 +11,13 @@ public class CommandResponse extends Command {
 	private int status;
 
 	public CommandResponse(int status, int rid, int operation, Object data) {
-		super(operation, ProtocolDefines.TYPE_COMMAND_RESPONSE, data);
+		super(operation, GlobalDefines.TYPE_COMMAND_RESPONSE, data);
 		this.status = status;
 		setRid(rid);
 	}
 
 	public CommandResponse(int status, int rid, int operation) {
-		super(operation, ProtocolDefines.TYPE_COMMAND_RESPONSE);
+		super(operation, GlobalDefines.TYPE_COMMAND_RESPONSE);
 		this.status = status;
 		setRid(rid);
 	}

@@ -36,10 +36,8 @@ public class ControllerClient {
 	}
 
 	public void newClient(SocketChannel socket) {
-		Client client = new Client(this, socket);
+		Client client = new Client(this, socket, userLocationManagerServlet);
 		clients.put(socket, client);
-		client.getClientInfo().addObserver(userLocationManagerServlet);
-		client.getClientInfo().notifyChange();
 	}
 
 	public void receiveMessage(SocketChannel socket, Message message) {

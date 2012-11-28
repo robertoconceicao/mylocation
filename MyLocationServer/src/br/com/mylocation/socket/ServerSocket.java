@@ -34,7 +34,6 @@ public class ServerSocket
             try {
                 selector.select();
             } catch (IOException e) {
-                //e.printStackTrace();
                 continue;
             }
             Set<SelectionKey> keys = selector.selectedKeys();
@@ -63,7 +62,6 @@ public class ServerSocket
             socketClient.register(selector, SelectionKey.OP_READ);
             controllerClient.newClient(socketClient);
         } catch (IOException e) {
-            //e.printStackTrace();
             close(socketClient);
         }
     }
@@ -89,10 +87,8 @@ public class ServerSocket
                 }
             }
         } catch (IOException e1) {
-            //e1.printStackTrace();
             close(socketClient);
         } catch (ClassNotFoundException e) {
-            //e.printStackTrace();
             close(socketClient);
         }
     }
@@ -106,7 +102,6 @@ public class ServerSocket
             ByteBuffer buffer = ByteBuffer.wrap(byteOutput.toByteArray());
             socketClient.write(buffer);
         } catch (IOException e1) {
-            //e1.printStackTrace();
             close(socketClient);
         }
     }
@@ -130,7 +125,6 @@ public class ServerSocket
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
             System.out.println("Socket na porta " + PORT_SERVER_SOCKET + " aberto.");
         } catch (IOException e) {
-            //e.printStackTrace();
         }
 
         loopSocket(serverSocket, selector);
@@ -141,7 +135,6 @@ public class ServerSocket
             serverSocket.close();
             System.out.println("Socket na porta " + PORT_SERVER_SOCKET + " fechado.");
         } catch (IOException e) {
-            //e.printStackTrace();
         }
     }
 }

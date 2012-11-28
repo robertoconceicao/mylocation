@@ -1,15 +1,11 @@
 package br.com.mylocation.servlet.listener;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import br.com.mylocation.socket.ControllerClient;
-import br.com.mylocation.socket.ServerSocket;
-
 public class MyLocationServerListener implements ServletContextListener {
 	
-	private ControllerClient controllerClient = null;
+	//private ControllerClient controllerClient = null;
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {

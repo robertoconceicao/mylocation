@@ -1,6 +1,6 @@
 package br.com.mylocation.bean.message;
 
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 
 public class Command extends Message {
 
@@ -12,12 +12,12 @@ public class Command extends Message {
 	private static int sequence = 1; 
 	
 	public Command(int operation, Object data) {
-		super(operation, ProtocolDefines.TYPE_COMMAND, data);
+		super(operation, GlobalDefines.TYPE_COMMAND, data);
 		this.rid = newRid();
 	}
 
 	public Command(int operation) {
-		super(operation, ProtocolDefines.TYPE_COMMAND);
+		super(operation, GlobalDefines.TYPE_COMMAND);
 		this.rid = newRid();
 	}
 

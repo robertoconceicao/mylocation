@@ -4,7 +4,8 @@ import java.util.Observable;
 import java.util.UUID;
 
 import br.com.mylocation.bean.message.event.Position;
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.controller.UserLocationManagerServlet;
+import br.com.mylocation.define.GlobalDefines;
 
 public class ClientInfo
     extends Observable {
@@ -14,10 +15,12 @@ public class ClientInfo
     private Position position;
     private int action;
 
-    public ClientInfo() {
+    public ClientInfo(UserLocationManagerServlet userLocationManagerServlet) {
         String randomKey = createKey();
         setKey(randomKey);
-        setAction(ProtocolDefines.ACTION_INSERT);
+        setAction(GlobalDefines.ACTION_INSERT);
+        addObserver(userLocationManagerServlet);
+        notifyChange();
     }
 
     public String getKey() {
@@ -26,7 +29,7 @@ public class ClientInfo
 
     private void setKey(String key) {
         this.key = key;
-        setAction(ProtocolDefines.ACTION_UPDATE);
+        setAction(GlobalDefines.ACTION_UPDATE);
         notifyChange();
     }
 
@@ -36,7 +39,7 @@ public class ClientInfo
 
     public void setName(String name) {
         this.name = name;
-        setAction(ProtocolDefines.ACTION_UPDATE);
+        setAction(GlobalDefines.ACTION_UPDATE);
         notifyChange();
     }
 
@@ -46,7 +49,7 @@ public class ClientInfo
 
     public void setPosition(Position position) {
         this.position = position;
-        setAction(ProtocolDefines.ACTION_UPDATE);
+        setAction(GlobalDefines.ACTION_UPDATE);
         notifyChange();
     }
 
@@ -65,7 +68,7 @@ public class ClientInfo
     }
 
     public void kill() {
-        setAction(ProtocolDefines.ACTION_REMOVE);
+        setAction(GlobalDefines.ACTION_REMOVE);
         notifyChange();
     }
 

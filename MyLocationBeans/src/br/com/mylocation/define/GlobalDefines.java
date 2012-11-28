@@ -1,10 +1,11 @@
 package br.com.mylocation.define;
 
-public interface ProtocolDefines {
+public interface GlobalDefines {
 
 	// operations
 	static final int OPERATION_LOGIN = 0;
 	static final int OPERATION_POSITION = 1;
+	static final int OPERATION_LOGOUT = 2;
 
 	// types
 	static final int TYPE_EVENT = 0;
@@ -20,8 +21,5 @@ public interface ProtocolDefines {
 	static final int ACTION_UPDATE = 1;
 	static final int ACTION_REMOVE = 2;
 
-	//static final String HOST_NAME = "10.4.0.12";
 	static final String HOST_NAME = "201.67.212.41";
-	//static final String HOST_NAME = "10.4.0.15";
-	static final int PORT = 8000;
 }
