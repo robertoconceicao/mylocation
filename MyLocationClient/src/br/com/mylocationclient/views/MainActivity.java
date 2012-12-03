@@ -12,7 +12,7 @@ import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
 import br.com.mylocation.bean.message.command.Login;
 import br.com.mylocation.bean.message.commandresponse.LoginResponse;
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 import br.com.mylocationclient.R;
 import br.com.mylocationclient.app.Client;
 import br.com.mylocationclient.core.RequestInstance;
@@ -69,8 +69,9 @@ public class MainActivity extends Activity {
 			}
 		}
 		try {
-			client.connect();
-			Command command = new Command(ProtocolDefines.OPERATION_LOGIN);
+			final TextView hostname = (TextView) findViewById(R.id.hostname);
+			client.connect(hostname.getText().toString(), GlobalDefines.PORT);
+			Command command = new Command(GlobalDefines.OPERATION_LOGIN);
 			Login login = new Login("Teste");
 			command.setData(login);
 			/*
@@ -84,7 +85,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onLogin(CommandResponse response) {
-		if (response.getStatus() == ProtocolDefines.STATUS_SUCCESS 
+		if (response.getStatus() == GlobalDefines.STATUS_SUCCESS 
 			&& response.getData() != null) {
 			final LoginResponse loginResponse = (LoginResponse) response.getData();
 			client.setKey(loginResponse.getKey());
