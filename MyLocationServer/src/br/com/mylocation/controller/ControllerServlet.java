@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import br.com.mylocation.socket.ControllerClient;
 import br.com.mylocation.socket.ServerSocket;
 
-@WebServlet(description = "Servlet de Controle", urlPatterns = { "/ControllerServlet" }, loadOnStartup = 0)
+@WebServlet(description = "Servlet de Controle", urlPatterns = { "/ControllerServlet" }/*, loadOnStartup = 0*/)
 public class ControllerServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;

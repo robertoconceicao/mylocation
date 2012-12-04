@@ -47,7 +47,7 @@ function requestUserLocation(divMap) {
 	}
 	
 	var userCode = document.getElementById("user_code").value;
-	var url = "UserLocationManagerServlet?user_code=" + userCode;
+	var url = "UserLocationManager?user_code=" + userCode;
 	
 	ajaxRequest.onreadystatechange = function()
 	{
@@ -62,33 +62,48 @@ function requestUserLocation(divMap) {
 function updateUserLocation(jsonUserInfo, divMap) {
 	//alert("json: " + jsonUserInfo);
 	var user = eval("(" + jsonUserInfo + ")");
-	document.getElementById("user_info").innerHTML = "User: " + user.name;
+	alert("request status: " + user.status);
+	
+	switch (user.status) {
+	case -1:
+		document.getElementById("user_info").innerHTML = "Internal error!";
+		return;
+	case 0:
+		document.getElementById("user_info").innerHTML = "User not found!";
+		return;
+	case 1:
+		document.getElementById("user_info").innerHTML = "User: " + user.name;
+		break;
+	default:
+		document.getElementById("user_info").innerHTML = "x-(";
+		return;
+	}
 	
 	var myLatlng = new google.maps.LatLng(user.latitude, user.longitude);
-    var myOptions = {
-      zoom: 10,
-      center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
+	var myOptions = {
+			zoom: 10,
+			center: myLatlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
 
-    var map = new google.maps.Map(document.getElementById(divMap), myOptions);
+	var map = new google.maps.Map(document.getElementById(divMap), myOptions);
 
-    var contentString = "<div id='content'>" +
-        "<h1>" + user.name + ":<br/>" + user.extra + "</h1></div>";
+	var contentString = "<div id='content'>" +
+		"<h1>" + user.name + ":<br/>" + user.extra + "</h1></div>";
 
-    var infowindow = new google.maps.InfoWindow({
-        content: contentString
-    });
+	var infowindow = new google.maps.InfoWindow({
+		content: contentString
+	});
 
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: user.name
-    });
+	var marker = new google.maps.Marker({
+		position: myLatlng,
+		map: map,
+		title: user.name
+	});
 
-    google.maps.event.addListener(marker, 'click', function() {
-      infowindow.open(map,marker);
-    });
+	google.maps.event.addListener(marker, 'click', function() {
+		infowindow.open(map,marker);
+	});
 
-    marker.setMap(map);
+	marker.setMap(map);
 }
