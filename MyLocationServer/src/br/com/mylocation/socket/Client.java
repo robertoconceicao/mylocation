@@ -2,9 +2,7 @@ package br.com.mylocation.socket;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
-
 import br.com.mylocation.bean.message.Message;
-import br.com.mylocation.controller.UserLocationManagerServlet;
 import br.com.mylocation.model.ClientInfo;
 import br.com.mylocation.protocol.SwitchMessages;
 
@@ -15,12 +13,12 @@ public class Client {
 	private SocketChannel socket;
 	private ClientInfo clientInfo;
 
-	public Client(ControllerClient controllerClient, SocketChannel socket, UserLocationManagerServlet userLocationManagerServlet) {
+	public Client(ControllerClient controllerClient, SocketChannel socket) {
 		System.out.println("Novo cliente...");
 		this.controllerClient = controllerClient;
 		this.socket = socket;
 		switchMessages = new SwitchMessages(this);
-		clientInfo = new ClientInfo(userLocationManagerServlet);
+		clientInfo = new ClientInfo();
 	}
 
 	public ClientInfo getClientInfo() {
@@ -48,7 +46,6 @@ public class Client {
 
 	public void kill() {
 		System.out.println("Matando cliente...");
-		clientInfo.kill();
 		try {
 			socket.close();
 		} catch (IOException e) {

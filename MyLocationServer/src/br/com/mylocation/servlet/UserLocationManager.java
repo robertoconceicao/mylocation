@@ -1,4 +1,4 @@
-package br.com.mylocation.servlets;
+package br.com.mylocation.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
