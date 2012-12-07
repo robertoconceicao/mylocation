@@ -33,6 +33,12 @@ public abstract class Host {
 		socket.connect(hostName, port);			
     }
 	
+	public void close(){
+		if(socket != null) {
+			socket.close();
+		}
+	}
+	
 	/**
 	 * Metodo que separa o tipo de mensagem recebida do servidor
 	 * Não deve ser chamado diretamente

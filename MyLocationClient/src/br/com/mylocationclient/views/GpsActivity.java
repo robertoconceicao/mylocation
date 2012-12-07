@@ -22,14 +22,19 @@ public class GpsActivity extends Activity implements LocationListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gps);
+		setContentView(R.layout.activity_main);
 		
 		client = Client.getInstance();
-		
-		latitudeText = (TextView) findViewById(R.id.infoLatitude);
-		longitudeText = (TextView) findViewById(R.id.infoLongitude);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+		Bundle extras = getIntent().getExtras();
+		String key = extras.getString("key");
+		TextView textKey = (TextView) findViewById(R.id.text_key);
+		textKey.setText("Code: "+key);
+		
+		latitudeText = (TextView) findViewById(R.id.labelLatitude);
+		longitudeText = (TextView) findViewById(R.id.labelLongitude);
+
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	}
 
@@ -47,8 +52,8 @@ public class GpsActivity extends Activity implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		latitudeText.setText(String.valueOf(location.getLatitude()));
-		longitudeText.setText(String.valueOf(location.getLongitude()));
+		latitudeText.setText("Latitude: "+String.valueOf(location.getLatitude()));
+		longitudeText.setText("Longitude: "+String.valueOf(location.getLongitude()));
 		
 		if(client != null) {
 			Position position = new Position(location.getLatitude(),
