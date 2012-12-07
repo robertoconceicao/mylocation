@@ -22,4 +22,5 @@ public interface GlobalDefines {
 	static final int ACTION_REMOVE = 2;
 
 	static final String HOST_NAME = "201.67.212.41";
+	static final int PORT = 8000;
 }

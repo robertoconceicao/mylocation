@@ -15,12 +15,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.define.GlobalDefines;
 
 public class ServerSocket
     implements Runnable {
 
     private static final int READ_BUFFER_SIZE = 1024;
-    private static final int PORT_SERVER_SOCKET = 8000;
     private ControllerClient controllerClient;
     private ServerSocketChannel serverSocket;
 
@@ -119,11 +119,11 @@ public class ServerSocket
         try {
             serverSocket = ServerSocketChannel.open();
             serverSocket.configureBlocking(false);
-            address = new InetSocketAddress(PORT_SERVER_SOCKET);
+            address = new InetSocketAddress(GlobalDefines.PORT);
             serverSocket.socket().bind(address);
             selector = Selector.open();
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Socket na porta " + PORT_SERVER_SOCKET + " aberto.");
+            System.out.println("Socket na porta " + GlobalDefines.PORT + " aberto.");
         } catch (IOException e) {
         }
 
@@ -133,7 +133,7 @@ public class ServerSocket
     public void destroy() {
         try {
             serverSocket.close();
-            System.out.println("Socket na porta " + PORT_SERVER_SOCKET + " fechado.");
+            System.out.println("Socket na porta " + GlobalDefines.PORT + " fechado.");
         } catch (IOException e) {
         }
     }

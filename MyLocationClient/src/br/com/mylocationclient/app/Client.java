@@ -5,11 +5,11 @@ import br.com.mylocation.bean.message.CommandResponse;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.bean.message.event.Position;
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 import br.com.mylocationclient.core.Host;
 import br.com.mylocationclient.views.MainActivity;
 
-public class Client extends Host  {
+public class Client extends Host {
 	
 	private String key;
 	private MainActivity mainActivity;
@@ -25,13 +25,9 @@ public class Client extends Host  {
 		}
 		return client;
 	}
-	
-	public void connect() throws Exception {
-		socket.connect(ProtocolDefines.HOST_NAME, ProtocolDefines.PORT);			
-    }
-			
+				
 	public void sendPosition(Position position){
-		Event event = new Event(ProtocolDefines.OPERATION_POSITION);
+		Event event = new Event(GlobalDefines.OPERATION_POSITION);
 		event.setData(position);
 		sendEvent(event);
 	}

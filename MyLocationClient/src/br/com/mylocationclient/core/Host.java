@@ -7,7 +7,7 @@ import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.Message;
-import br.com.mylocation.define.ProtocolDefines;
+import br.com.mylocation.define.GlobalDefines;
 import br.com.mylocationclient.io.SokectClient;
 
 public abstract class Host {
@@ -28,6 +28,11 @@ public abstract class Host {
 		mapRequests = new HashMap<Integer, RequestInstance>();
 	}
     
+	public void connect(String hostName, int port) throws Exception {
+		socket = new SokectClient(this);
+		socket.connect(hostName, port);			
+    }
+	
 	/**
 	 * Metodo que separa o tipo de mensagem recebida do servidor
 	 * Não deve ser chamado diretamente
@@ -37,14 +42,14 @@ public abstract class Host {
     	if(message != null){
     		System.out.println("onMessage opr: "+message.getOperation()+" type: "+message.getType());
     		switch(message.getType()) {
-    			case ProtocolDefines.TYPE_COMMAND:
+    			case GlobalDefines.TYPE_COMMAND:
     				CommandResponse response = onCommand((Command) message);
     				sendResponse(response);
     				break;
-	    		case ProtocolDefines.TYPE_COMMAND_RESPONSE:
+	    		case GlobalDefines.TYPE_COMMAND_RESPONSE:
 	    			onCommandResponse((CommandResponse) message);
 	    			break;    		
-	    		case ProtocolDefines.TYPE_EVENT:
+	    		case GlobalDefines.TYPE_EVENT:
 	    			onEvent((Event)message);
 	    			break;
 	    		default:
