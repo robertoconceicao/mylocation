@@ -30,9 +30,16 @@ public class MainActivity extends Activity {
 		client.setMainActivity(this);
 
 		addListenerOnButtonConnect();
-		addListenerOnButtonTrack();
+		//addListenerOnButtonTrack();
 	}
 
+	@Override
+	public void onDestroy(){
+		if(client != null){
+			client.close();
+		}
+	}
+	
 	private void addListenerOnButtonConnect() {
 		final Button buttonConnect = (Button) findViewById(R.id.buttonConnect);
 		buttonConnect.setOnClickListener(new OnClickListener() {
@@ -43,16 +50,16 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	private void addListenerOnButtonTrack() {
-		final Button buttonTrack = (Button) findViewById(R.id.buttonTrack);
-		buttonTrack.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
-				startActivity(intent);
-			}
-		});
-	}
+//	private void addListenerOnButtonTrack() {
+//		final Button buttonTrack = (Button) findViewById(R.id.buttonTrack);
+//		buttonTrack.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent(MainActivity.this, GpsActivity.class);
+//				startActivity(intent);
+//			}
+//		});
+//	}
 
 	public void sendLogin() {
 		/*
@@ -89,7 +96,12 @@ public class MainActivity extends Activity {
 			&& response.getData() != null) {
 			final LoginResponse loginResponse = (LoginResponse) response.getData();
 			client.setKey(loginResponse.getKey());
+			
 			dialog("Conectado key: " + loginResponse.getKey());
+			// inicia o rastreador automatico
+			Intent intent = new Intent(this, GpsActivity.class);
+			intent.putExtra("key", loginResponse.getKey());
+			startActivity(intent);			
 		}else{
 			dialog("Erro no commando de login");
 		}
@@ -98,9 +110,7 @@ public class MainActivity extends Activity {
 	public void dialog(final String message) {
 		Runnable run = new Runnable() {
 			@Override
-			public void run() {
-				TextView textKey = (TextView) findViewById(R.id.text_key);
-				textKey.setText(message);
+			public void run() {				
 				Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();		
 			}
 		};		
