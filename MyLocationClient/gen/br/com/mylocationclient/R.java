@@ -18,18 +18,22 @@ public final class R {
     }
     public static final class id {
         public static final int LayoutMain=0x7f070009;
-        public static final int buttonConnect=0x7f07000c;
-        public static final int hostname=0x7f07000b;
+        public static final int buttonConnect=0x7f070010;
+        public static final int hostname=0x7f07000e;
         public static final int infoLatitude=0x7f070004;
         public static final int infoLongitude=0x7f070007;
         public static final int info_layout=0x7f070001;
         public static final int labelLatitude=0x7f070003;
         public static final int labelLongitude=0x7f070006;
         public static final int main_layout=0x7f070000;
-        public static final int menu_settings=0x7f07000e;
-        public static final int tab3=0x7f07000d;
+        public static final int menu_settings=0x7f070012;
+        public static final int name=0x7f07000c;
+        public static final int tab3=0x7f070011;
         public static final int tableRow1=0x7f070002;
         public static final int tableRow2=0x7f070005;
+        public static final int tableRow3=0x7f07000f;
+        public static final int textIp=0x7f07000d;
+        public static final int textName=0x7f07000b;
         public static final int textView2=0x7f070008;
         public static final int text_key=0x7f07000a;
     }
@@ -61,6 +65,8 @@ public final class R {
         public static final int road_home=0x7f040011;
         public static final int send_track=0x7f040018;
         public static final int start_tracker=0x7f04000d;
+        public static final int text_ip=0x7f040019;
+        public static final int text_name=0x7f04001a;
         public static final int title_activity_dump_file=0x7f040015;
         public static final int title_activity_gps=0x7f040017;
         public static final int title_activity_main=0x7f040003;

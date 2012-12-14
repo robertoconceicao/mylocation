@@ -76,10 +76,11 @@ public class MainActivity extends Activity {
 			}
 		}
 		try {
+			final TextView name = (TextView) findViewById(R.id.name);
 			final TextView hostname = (TextView) findViewById(R.id.hostname);
 			client.connect(hostname.getText().toString(), GlobalDefines.PORT);
 			Command command = new Command(GlobalDefines.OPERATION_LOGIN);
-			Login login = new Login("Teste");
+			Login login = new Login(name.getText().toString());
 			command.setData(login);
 			/*
 			 * encapsulou o command numa Instance e envia para o server. A

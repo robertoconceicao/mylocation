@@ -25,5 +25,6 @@
     <string name="dump_file"> Visualizar o arquivo </string>
     <string name="title_activity_gps">GpsActivity</string>
     <string name="send_track">Enviando dados para o servidor</string>
-
+	<string name="text_ip">Ip:</string>
+    <string name="text_name">Name:</string>
 </resources>
