@@ -13,13 +13,14 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
-
+import org.apache.log4j.Logger;
 import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.GlobalDefines;
 
 public class ServerSocket
     implements Runnable {
 
+	private static Logger log = Logger.getLogger(ServerSocket.class);
     private static final int READ_BUFFER_SIZE = 1024;
     private ControllerClient controllerClient;
     private ServerSocketChannel serverSocket;
@@ -123,7 +124,7 @@ public class ServerSocket
             serverSocket.socket().bind(address);
             selector = Selector.open();
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Socket na porta " + GlobalDefines.PORT + " aberto.");
+            log.info("Socket na porta " + GlobalDefines.PORT + " aberto.");
         } catch (IOException e) {
         }
 
@@ -132,8 +133,8 @@ public class ServerSocket
 
     public void destroy() {
         try {
-            serverSocket.close();
-            System.out.println("Socket na porta " + GlobalDefines.PORT + " fechado.");
+            serverSocket.socket().close();
+            log.info("Socket na porta " + GlobalDefines.PORT + " fechado.");
         } catch (IOException e) {
         }
     }

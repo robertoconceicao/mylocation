@@ -1,5 +1,7 @@
 package br.com.mylocation.protocol;
 
+import org.apache.log4j.Logger;
+
 import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.CommandResponse;
 import br.com.mylocation.bean.message.command.Login;
@@ -8,6 +10,7 @@ import br.com.mylocation.define.GlobalDefines;
 
 public class ParserCommands {
 
+	private static Logger log = Logger.getLogger(ParserCommands.class);
 	private SwitchMessages switchMessages;
 
 	public ParserCommands(SwitchMessages switchMessages) {
@@ -20,13 +23,13 @@ public class ParserCommands {
 			parserCommandLogin(command);
 			break;
 		default:
-			System.out.println("Erro: Command não tratado!");
+			log.warn("Comando inválido.");
 			break;
 		}
 	}
 
 	private void parserCommandLogin(Command command) {
-		System.out.println("Parsing Command Login RID: " + command.getRid());
+		log.debug("Processando comando Login RID: " + command.getRid() + ".");
 
 		if (command.getData() != null && command.getData() instanceof Login) {
 			Login login = (Login) command.getData();
@@ -41,7 +44,7 @@ public class ParserCommands {
 
 			switchMessages.getClient().sendMessage(commandResponse);
 		} else {
-			System.out.println("Erro: Parsing Command Login RID: " + command.getRid());
+			log.error("Falha ao processar comando Login RID: " + command.getRid() + ".");
 		}
 	}
 }

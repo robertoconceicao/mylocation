@@ -1,5 +1,7 @@
 package br.com.mylocation.protocol;
 
+import org.apache.log4j.Logger;
+
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.event.Logout;
 import br.com.mylocation.bean.message.event.Position;
@@ -7,6 +9,7 @@ import br.com.mylocation.define.GlobalDefines;
 
 public class ParserEvents {
 
+	private static Logger log = Logger.getLogger(ParserEvents.class);
 	private SwitchMessages switchMessages;
 
 	public ParserEvents(SwitchMessages switchMessages) {
@@ -22,29 +25,29 @@ public class ParserEvents {
 			parserEventLogout(event);
 			break;
 		default:
-			System.out.println("Erro: Event não tratado!");
+			log.warn("Evento inválido.");
 			break;
 		}
 	}
 
 	private void parserEventPosition(Event event) {
-		System.out.println("Parsing Event Position");
+		log.debug("Processando evento Position.");
 
 		if (event.getData() != null && event.getData() instanceof Position) {
 			Position position = (Position) event.getData();
 			switchMessages.getClient().getClientInfo().setPosition(position);
 		} else {
-			System.out.println("Erro: Parsing Event Position");
+			log.error("Falha ao processar evento Position.");
 		}
 	}
 
 	private void parserEventLogout(Event event) {
-		System.out.println("Parsing Event Logout");
+		log.debug("Processando evento Logout.");
 
 		if (event.getData() != null && event.getData() instanceof Logout) {
 			switchMessages.getClient().removeAndKill();
 		} else {
-			System.out.println("Erro: Parsing Event Logout");
+			log.error("Falha ao processar evento Logout.");
 		}
 	}
 }
