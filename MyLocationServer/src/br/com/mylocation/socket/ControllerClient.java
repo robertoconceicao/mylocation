@@ -11,35 +11,26 @@ import br.com.mylocation.model.ClientInfo;
 public class ControllerClient {
 
 	private ServerSocket serverSocket;
-	private Map<SocketChannel, Client> clients;
-
-	public ControllerClient(ServerSocket serverSocket) {
-		this.serverSocket = serverSocket;
-		clients = new HashMap<SocketChannel, Client>();
-	}
+	private Map<SocketChannel, Client> clientList;
+	private List<ClientInfo> clientInfoList;
 
 	public ControllerClient() {
-		clients = new HashMap<SocketChannel, Client>();
+		clientList = new HashMap<SocketChannel, Client>();
+		clientInfoList = new ArrayList<ClientInfo>();
 	}
 
 	public List<ClientInfo> getClientInfoList() {
-		List<ClientInfo> clientsList = new ArrayList<>();
-
-		for (Map.Entry<SocketChannel, Client> entry : clients.entrySet()) {
-			Client client = entry.getValue();
-			clientsList.add(client.getClientInfo());
-		}
-
-		return clientsList;
+		return clientInfoList;
 	}
 
 	public void newClient(SocketChannel socket) {
 		Client client = new Client(this, socket);
-		clients.put(socket, client);
+		clientList.put(socket, client);
+		clientInfoList.add(client.getClientInfo());
 	}
 
 	public void receiveMessage(SocketChannel socket, Message message) {
-		Client client = clients.get(socket);
+		Client client = clientList.get(socket);
 		if (client != null) {
 			client.receiveMessage(message);
 		}
@@ -50,7 +41,8 @@ public class ControllerClient {
 	}
 
 	public void killClient(SocketChannel socket) {
-		Client client = clients.remove(socket);
+		Client client = clientList.remove(socket);
+		clientInfoList.remove(client.getClientInfo());
 		if (client != null) {
 			client.kill();
 		}
