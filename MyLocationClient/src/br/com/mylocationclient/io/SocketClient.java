@@ -13,12 +13,12 @@ import br.com.mylocation.bean.message.Message;
 import br.com.mylocationclient.core.Host;
 
 
-public class SokectClient implements Runnable {
+public class SocketClient implements Runnable {
 
 	private SocketChannel socketChannel;
 	private Host host;
 	
-	public SokectClient(Host host){
+	public SocketClient(Host host){
 		try {
 			socketChannel = SocketChannel.open();
 			socketChannel.configureBlocking(true);

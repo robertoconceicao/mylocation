@@ -8,28 +8,28 @@ import br.com.mylocation.bean.message.CommandResponse;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.Message;
 import br.com.mylocation.define.GlobalDefines;
-import br.com.mylocationclient.io.SokectClient;
+import br.com.mylocationclient.io.SocketClient;
 
 public abstract class Host {
 
-	protected SokectClient socket;
+	protected SocketClient socket;
 	private String name;	
 	private HashMap<Integer, RequestInstance> mapRequests;
 	
 	public Host(String name){
 		this.name = name;
-		socket = new SokectClient(this);
+		socket = new SocketClient(this);
 		mapRequests = new HashMap<Integer, RequestInstance>();
 	}
 	
-	public Host(String name, SokectClient client){
+	public Host(String name, SocketClient client){
 		this.name = name;
 		this.socket = client;
 		mapRequests = new HashMap<Integer, RequestInstance>();
 	}
     
 	public void connect(String hostName, int port) throws Exception {
-		socket = new SokectClient(this);
+		socket = new SocketClient(this);
 		socket.connect(hostName, port);			
     }
 	
@@ -147,11 +147,11 @@ public abstract class Host {
     public abstract CommandResponse onCommand(Command command);
     
     
-	public SokectClient getClient() {
+	public SocketClient getClient() {
 		return socket;
 	}
 
-	public void setClient(SokectClient client) {
+	public void setClient(SocketClient client) {
 		this.socket = client;
 	}
 
