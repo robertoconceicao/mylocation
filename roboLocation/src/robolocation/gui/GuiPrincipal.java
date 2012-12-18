@@ -17,6 +17,7 @@ public class GuiPrincipal extends javax.swing.JFrame {
 
     private boolean play;
     private RoboLocation robo;
+    private Configuration config;
     
     /**
      * Creates new form GuiPrincipal
@@ -28,7 +29,7 @@ public class GuiPrincipal extends javax.swing.JFrame {
 
     public void execute() throws HeadlessException {
         try{                     
-            Configuration config = new Configuration(Integer.parseInt(qtdeClientes.getText()),
+            config = new Configuration(Integer.parseInt(qtdeClientes.getText()),
                                                  Integer.parseInt(timeLogin.getText()), 
                                                  Integer.parseInt(timePosition.getText()),
                                                  hostName.getText(),
@@ -37,7 +38,7 @@ public class GuiPrincipal extends javax.swing.JFrame {
             if(robo != null){                
                 robo.stop();
             }
-            robo = new RoboLocation(config);
+            robo = new RoboLocation(this);
             robo.start();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Digitar apenas numeros nos campos","Error",JOptionPane.ERROR_MESSAGE);            
@@ -58,6 +59,18 @@ public class GuiPrincipal extends javax.swing.JFrame {
         if(robo!=null){
             robo.stop();
         }
+    }
+
+    public Configuration getConfig() {
+        return config;
+    }
+
+    public void setConfig(Configuration config) {
+        this.config = config;
+    }
+    
+    public void refresh(){
+        
     }
     
     /**
