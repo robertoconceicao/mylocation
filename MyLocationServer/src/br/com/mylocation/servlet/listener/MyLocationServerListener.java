@@ -22,7 +22,7 @@ public class MyLocationServerListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		initLog();
+		initLog(event.getServletContext().getContextPath());
 		
 		log.info("Inicializando sistema...");
 		ServletContext context = event.getServletContext();		
@@ -33,7 +33,7 @@ public class MyLocationServerListener implements ServletContextListener {
 		context.setAttribute("controller_client", controllerClient);		
 	}
 
-	private void initLog() {
+	private void initLog(String contextPath) {	
 		File propertiesFile = new File("configLog.properties");
 		PropertyConfigurator.configure(propertiesFile.toString());
 	}
