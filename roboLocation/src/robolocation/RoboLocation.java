@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import robolocation.gui.GuiPrincipal;
 import robolocation.io.SocketClient;
 
 /**
@@ -19,29 +20,39 @@ import robolocation.io.SocketClient;
  */
 public class RoboLocation {
 
-    private Configuration config;
+    private GuiPrincipal guiPrincipal;
     private ExecutorService executor;
     private boolean runner;
     private List<SocketClient> listClients;
+    private static int sequence = 0;
     
-    public RoboLocation(Configuration config) {
-        this.config = config;
+    private int TIME_REFRESH = 5000;
+    
+    private long refresh;
+    
+    public RoboLocation(GuiPrincipal guiPrincipal) {
+        this.guiPrincipal = guiPrincipal;
         executor = Executors.newCachedThreadPool();
         runner = false;
         listClients = new ArrayList<SocketClient>();
+        refresh = System.currentTimeMillis() + TIME_REFRESH;
     }
     
     public void start() {
         runner = true;
-        if(config.getQtdeClients() > 0){
-            for(int i=0;i<config.getQtdeClients();i++){                
-                newClient();                
-            }
-        }else{
-            while(runner){
+        
+        if(guiPrincipal.getConfig().getQtdeClients() > 0) {
+            for(int i=0;i<guiPrincipal.getConfig().getQtdeClients();i++){                
                 newClient();
+                updateGui();
+            }
+        }else {
+            while(runner) {
+                newClient();
+                updateGui();
             }
         }
+        
     }
     
     public void stop() {
@@ -55,8 +66,8 @@ public class RoboLocation {
     
     public void newClient(){
         try {
-            SocketClient client = new SocketClient();
-            client.connect(config.getHostName(), config.getPort());
+            SocketClient client = new SocketClient(sequence++, this);
+            client.connect(guiPrincipal.getConfig().getHostName(), guiPrincipal.getConfig().getPort());
             listClients.add(client);
             
             executor.execute(client);
@@ -67,5 +78,20 @@ public class RoboLocation {
         } catch (IOException ex) {
             Logger.getLogger(RoboLocation.class.getName()).log(Level.SEVERE, null, ex);
         }        
+    }
+
+    public Configuration getConfig() {
+        return guiPrincipal.getConfig();
+    }
+
+    public void finishClient(SocketClient client){
+        
+    }
+    
+    public void updateGui(){
+        if(System.currentTimeMillis() > refresh){
+            guiPrincipal.refresh();
+            refresh += TIME_REFRESH;                    
+        }
     }
 }
