@@ -2,8 +2,6 @@ package br.com.mylocation.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,16 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
 import br.com.mylocation.model.ClientInfo;
 import br.com.mylocation.socket.ControllerClient;
 
 @WebServlet("/UserLocationManager")
 public class UserLocationManager extends HttpServlet {
 
+	private static final long serialVersionUID = -5009364723596091295L;
 	private static Logger log = Logger.getLogger(UserLocationManager.class);
-	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,26 +50,6 @@ public class UserLocationManager extends HttpServlet {
 			jsonObject.put("status", 0);
 			printResponse(response, jsonObject.toString());
 			log.debug("Lista com informações dos clientes está vazia.");
-			return;
-		}
-
-		if (userCode.equals("all")) {
-			LinkedList<JSONObject> jsonList = new LinkedList<JSONObject>();
-			JSONObject json;
-			for (ClientInfo client : controllerClient.getClientInfoList()) {
-				if (client.getPosition() == null) {
-					continue;
-				}
-				json = new JSONObject();
-				json.put("status", 1);
-				json.put("name", client.getName());
-				json.put("code", client.getKey());
-				json.put("latitude", client.getPosition().getLatitude());
-				json.put("longitude", client.getPosition().getLongitude());
-				json.put("extra", "Last place!!!");
-				jsonList.add(json);
-			}
-			printResponse(response, JSONValue.toJSONString(jsonList));
 			return;
 		}
 

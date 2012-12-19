@@ -24,7 +24,7 @@ function getGenericXMLHttpRequest() {
 	return request;
 }
 
-function requestUserLocation(divMap) {
+function requestUserLocation() {
 	if (this.task != null && typeof this.task !== "undefined") {
 		stopTask(this.task);
 		this.task = null;
@@ -37,12 +37,11 @@ function requestUserLocation(divMap) {
 		return;
 	}
 
-	var userCode = document.getElementById("user_code").value;
-	var url = "UserLocationManager?user_code=" + userCode;
+	var url = "AllUsersLocationManager";
 
 	ajaxRequest.onreadystatechange = function() {
 		if (ajaxRequest.readyState == 4 && ajaxRequest.status == 200) {
-			responseHandler(ajaxRequest.responseText, divMap);
+			responseHandler(ajaxRequest.responseText);
 		}
 	};
 
