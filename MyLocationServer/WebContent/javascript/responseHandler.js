@@ -1,7 +1,7 @@
 function responseHandler(jsonUserInfo, divMap) {
 	var infoUser = eval("(" + jsonUserInfo + ")");
 
-	if (user instanceof Array) {
+	if (infoUser instanceof Array) {
 		updateUserLocationArray(infoUser, divMap);
 	} else {
 		updateUserLocation(infoUser, divMap);

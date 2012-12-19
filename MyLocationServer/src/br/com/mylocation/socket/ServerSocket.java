@@ -35,6 +35,7 @@ public class ServerSocket
             try {
                 selector.select();
             } catch (IOException e) {
+            	log.error(e);
                 continue;
             }
             Set<SelectionKey> keys = selector.selectedKeys();
@@ -63,6 +64,7 @@ public class ServerSocket
             socketClient.register(selector, SelectionKey.OP_READ);
             controllerClient.newClient(socketClient);
         } catch (IOException e) {
+        	log.error(e);
             close(socketClient);
         }
     }
@@ -83,13 +85,16 @@ public class ServerSocket
                     controllerClient.receiveMessage(socketClient, message);
                     input.close();
                 } else {
+                	log.error("O objeto recebido não é um Message.");
                     input.close();
                     close(socketClient);
                 }
             }
         } catch (IOException e1) {
+        	log.error(e1);
             close(socketClient);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e2) {
+        	log.error(e2);
             close(socketClient);
         }
     }
@@ -102,7 +107,8 @@ public class ServerSocket
             output.flush();
             ByteBuffer buffer = ByteBuffer.wrap(byteOutput.toByteArray());
             socketClient.write(buffer);
-        } catch (IOException e1) {
+        } catch (IOException e) {
+        	log.error(e);
             close(socketClient);
         }
     }
@@ -126,6 +132,7 @@ public class ServerSocket
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
             log.info("Socket na porta " + GlobalDefines.PORT + " aberto.");
         } catch (IOException e) {
+        	log.error(e);
         }
 
         loopSocket(serverSocket, selector);
@@ -136,6 +143,7 @@ public class ServerSocket
             serverSocket.socket().close();
             log.info("Socket na porta " + GlobalDefines.PORT + " fechado.");
         } catch (IOException e) {
+        	log.error(e);
         }
     }
 }

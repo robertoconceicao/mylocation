@@ -25,7 +25,7 @@ function getGenericXMLHttpRequest() {
 }
 
 function requestUserLocation(divMap) {
-	if (this.task != null && typeof this.task === "undefined") {
+	if (this.task != null && typeof this.task !== "undefined") {
 		stopTask(this.task);
 		this.task = null;
 	}
@@ -49,11 +49,12 @@ function requestUserLocation(divMap) {
 	ajaxRequest.open("get", url, true);
 	ajaxRequest.send();
 
-	this.task = startTask(ajaxRequest);
+	this.task = startTask(ajaxRequest, url);
 }
 
-function startTask(ajaxRequest) {
-	setInterval(function() {
+function startTask(ajaxRequest, url) {
+	return setInterval(function() {
+		ajaxRequest.open("get", url, true);
 		ajaxRequest.send();
 	}, (5 * 1000));
 }

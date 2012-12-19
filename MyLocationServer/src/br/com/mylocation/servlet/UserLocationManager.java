@@ -56,11 +56,14 @@ public class UserLocationManager extends HttpServlet {
 			log.debug("Lista com informações dos clientes está vazia.");
 			return;
 		}
-		
+
 		if (userCode.equals("all")) {
 			LinkedList<JSONObject> jsonList = new LinkedList<JSONObject>();
 			JSONObject json;
 			for (ClientInfo client : controllerClient.getClientInfoList()) {
+				if (client.getPosition() == null) {
+					continue;
+				}
 				json = new JSONObject();
 				json.put("status", 1);
 				json.put("name", client.getName());
@@ -68,7 +71,7 @@ public class UserLocationManager extends HttpServlet {
 				json.put("latitude", client.getPosition().getLatitude());
 				json.put("longitude", client.getPosition().getLongitude());
 				json.put("extra", "Last place!!!");
-				jsonList.add(json);			
+				jsonList.add(json);
 			}
 			printResponse(response, JSONValue.toJSONString(jsonList));
 			return;
@@ -78,7 +81,7 @@ public class UserLocationManager extends HttpServlet {
 
 		for (ClientInfo client : controllerClient.getClientInfoList()) {
 			log.debug("client.key: [" + client.getKey() + "] userCode: [" + userCode + "]");
-			if (client.getKey().equals(userCode)) {
+			if (client.getKey().equals(userCode) && client.getPosition() != null) {
 				jsonObject.put("status", 1);
 				jsonObject.put("name", client.getName());
 				jsonObject.put("code", client.getKey());
