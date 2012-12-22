@@ -72,7 +72,7 @@ public class RoboLocation {
             
             executor.execute(client);
             
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException ex) {
             Logger.getLogger(RoboLocation.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

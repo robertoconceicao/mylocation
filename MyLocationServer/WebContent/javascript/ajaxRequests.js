@@ -48,13 +48,12 @@ function requestUserLocation() {
 	ajaxRequest.open("get", url, true);
 	ajaxRequest.send();
 
-	this.task = startTask(ajaxRequest, url);
+	this.task = startTask();
 }
 
 function startTask(ajaxRequest, url) {
 	return setInterval(function() {
-		ajaxRequest.open("get", url, true);
-		ajaxRequest.send();
+		requestUserLocation();
 	}, (5 * 1000));
 }
 

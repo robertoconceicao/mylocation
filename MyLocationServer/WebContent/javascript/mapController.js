@@ -8,7 +8,7 @@ function initialize(divMap) {
 		center : position,
 		mapTypeId : google.maps.MapTypeId.TERRAIN
 	};
-	new google.maps.Map(document.getElementById(divMap), myOptions);
+	map = new google.maps.Map(document.getElementById(divMap), myOptions);
 	
 	requestUserLocation();
 }

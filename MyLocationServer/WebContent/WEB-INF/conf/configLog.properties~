@@ -2,11 +2,11 @@ log4j.rootCategory = DEBUG, console, file
 
 log4j.appender.console = org.apache.log4j.ConsoleAppender
 log4j.appender.console.layout = org.apache.log4j.PatternLayout
-log4j.appender.console.layout.ConversionPattern = %d{dd/MM/yyyy HH:mm:ss,SSS} %5p %F:%L - %m%n
+log4j.appender.console.layout.ConversionPattern = %d{dd/MM/yyyy HH:mm:ss,mmm} %5p %F:%L - %m%n
 
 log4j.appender.file = org.apache.log4j.RollingFileAppender
 log4j.appender.file.File = MyLocationServer.log
 log4j.appender.file.MaxFileSize = 10000KB
 log4j.appender.file.MaxBackupIndex = 1
 log4j.appender.file.layout = org.apache.log4j.PatternLayout
-log4j.appender.file.layout.ConversionPattern = %d{dd/MM/yyyy HH:mm:ss,SSS} %5p %F:%L - %m%n
+log4j.appender.file.layout.ConversionPattern = %d{dd/MM/yyyy HH:mm:ss,mmm} %5p %F:%L - %m%n

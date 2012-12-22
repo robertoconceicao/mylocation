@@ -1,14 +1,12 @@
 package robolocation.io;
 
+import br.com.mylocation.bean.message.Command;
 import br.com.mylocation.bean.message.Event;
 import br.com.mylocation.bean.message.Message;
+import br.com.mylocation.bean.message.command.Login;
 import br.com.mylocation.bean.message.event.Position;
 import br.com.mylocation.define.GlobalDefines;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -20,19 +18,20 @@ public class SocketClient implements Runnable {
 
     private SocketChannel socketChannel;
     private int timeEventPosition;
-    private int id;
+    private static int lastId = 0;
+    private int id = lastId++;
     private long timeLogin;
     private RoboLocation robo;
-    
+
     public SocketClient(int id, RoboLocation robo) {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
             this.robo = robo;
             timeEventPosition = robo.getConfig().getTimePosition();
-            if(robo.getConfig().getTimeLogin() > 0){
-                this.timeLogin = System.currentTimeMillis() + timeLogin;
-            }else{
+            if (robo.getConfig().getTimeLogin() > 0) {
+                this.timeLogin = robo.getConfig().getTimeLogin();
+            } else {
                 this.timeLogin = 0;
             }
         } catch (IOException e) {
@@ -55,7 +54,7 @@ public class SocketClient implements Runnable {
      */
     public void connect(String hostname, int port) throws IOException {
         socketChannel.connect(new InetSocketAddress(hostname, port));
-    }    
+    }
 
     public void write(Message message) {
         try {
@@ -67,31 +66,34 @@ public class SocketClient implements Runnable {
             socketChannel.write(buffer);
         } catch (IOException e1) {
             e1.printStackTrace();
-            close();            
+            close();
         }
     }
 
     public void loop() {
+        if (isConnected()) {
+            Command cmd = new Command(GlobalDefines.OPERATION_LOGIN, new Login("Nome " + id));
+            write(cmd);
+            try {
+                Thread.sleep(timeLogin);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         while (isConnected()) {
             try {
                 long time = System.currentTimeMillis();
-                
-                if(timeLogin != 0 && time > timeLogin){
-                    break; // acabou o tempo de login
-                }
-                
-                Thread.sleep(timeEventPosition);
-                
-                double latitude = -27.0+id+time;
-                double longitude = -48.0+id+time;
-                
-                Event event = new Event(GlobalDefines.OPERATION_POSITION);		
-                Position position = new Position(latitude, 
-                                                longitude, 
-                                                0, 0, 0, time);
+
+                double latitude = Double.parseDouble(((int)(Math.random() * 30) * -1) + "." + ((int)((1 + Math.random()) * 10000000)));
+                double longitude = Double.parseDouble(((int)(38 + (Math.random() * 30)) * -1) + "." + ((int)((1 + Math.random()) * 10000000)));
+
+                Event event = new Event(GlobalDefines.OPERATION_POSITION);
+                Position position = new Position(latitude, longitude, 0, 0, 0, time);
                 event.setData(position);
-                
+
                 write(event);
+                Thread.sleep(timeEventPosition);
             } catch (InterruptedException ex) {
                 Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
             }
